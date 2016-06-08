@@ -3,7 +3,7 @@ My configuration files. I use zshell with oh-my-zsh, vim and tmux. The goal is f
 
 ## Prerequisites
 zsh, oh-my-zsh, vim, tmux and git needed. 
-
+For agnoster theme in oh-my-zsh to work properly patched fonts are needed. The recommeneded way to achieve this is to install [Powerline-fonts](https://github.com/powerline/fonts).
 ## Installing
 _NOTE:_ Backup any dotfiles you already have before installing. The symlinking will remove any files you might already have with the same names.
 1. Clone this repo and `cd` into it.
