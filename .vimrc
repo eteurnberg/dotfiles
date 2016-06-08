@@ -19,13 +19,6 @@ call vundle#end()
 filetype plugin indent on
 " }}}
 
-"" Pathogen Initialisation {{{
-"execute pathogen#infect()
-"syntax on
-"filetype plugin indent on
-"syntax enable
-"" }}}
-
 " Solarized dark initialisation {{{ 
 syntax enable
 set background=dark
