@@ -1,0 +1,7 @@
+[user]
+	name = Emil Teurnberg
+	email = eat2@st-andrews.ac.uk
+[core]
+	excludesfile = /Users/emilteurnberg/.gitignore_global
+[push]
+	default = matching
