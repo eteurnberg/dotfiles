@@ -15,6 +15,7 @@ fi
 
 ln -sfv $DOTFILES_DIRECTORY/.vimrc ~
 ln -sfv $DOTFILES_DIRECTORY/.tmux.conf ~
+ln -sfv $DOTFILES_DIRECTORY/.tmuxline_snapshot.conf ~
 ln -sfv $DOTFILES_DIRECTORY/.zshrc ~
 ln -sfv $DOTFILES_DIRECTORY/.gitconfig ~
 ln -sfv $DOTFILES_DIRECTORY/.gitignore_global ~
