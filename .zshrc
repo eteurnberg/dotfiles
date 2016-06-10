@@ -1,6 +1,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/emilteurnberg/.oh-my-zsh
-# Set name of the theme to load.
+
 # Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="powerlevel9k/powerlevel9k"
 DEFAULT_USER="$USER"
@@ -47,12 +47,11 @@ DEFAULT_USER="$USER"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git meteor npm)
 
 # User configuration
 
 export PATH="/opt/local/bin:/opt/local/sbin:/Users/emilteurnberg/.gvm/vertx/current/bin:/Users/emilteurnberg/.gvm/springboot/current/bin:/Users/emilteurnberg/.gvm/lazybones/current/bin:/Users/emilteurnberg/.gvm/jbake/current/bin:/Users/emilteurnberg/.gvm/groovyserv/current/bin:/Users/emilteurnberg/.gvm/groovy/current/bin:/Users/emilteurnberg/.gvm/griffon/current/bin:/Users/emilteurnberg/.gvm/grails/current/bin:/Users/emilteurnberg/.gvm/gradle/current/bin:/Users/emilteurnberg/.gvm/glide/current/bin:/Users/emilteurnberg/.gvm/gaiden/current/bin:/Users/emilteurnberg/.gvm/crash/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
-# export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -75,6 +74,9 @@ source $ZSH/oh-my-zsh.sh
 # path to avoid apples locked down usr/bin
 export PATH="/usr/local/bin:$PATH"
 
+# Set default editor to vim
+export EDITOR='vim'
+
 # For a full list of active aliases, run `alias`.
 alias cl="clear"
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
@@ -83,7 +85,7 @@ alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 # Powerlevel9k Config
 # Prompt segments
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status battery time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status battery)
 
 # Segment customizations
 POWERLEVEL9K_BATTERY_LOW_THRESHOLD=15
