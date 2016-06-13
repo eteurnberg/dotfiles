@@ -45,6 +45,9 @@ filetype plugin indent on
 :set tabstop=4
 :set shiftwidth=4
 :set expandtab
+
+" Removes trailing whitespace for certain filetypes
+autocmd FileType js,jsx,html autocmd BufWritePre <buffer> :%s/\s\+$//e
 " }}}
 
 " Autocompletion {{{
