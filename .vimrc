@@ -37,6 +37,8 @@ set noshowmode " Hide the default mode text
 :inoremap jj <Esc>
 :nnoremap <C-X> :tabn<CR>
 :nnoremap <C-A> :tabp<CR>
+:nmap <C-o> o<Esc>k
+:nmap <C-O> O<Esc>j
 " }}}
 
 " Generic editor {{{
