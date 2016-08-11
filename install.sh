@@ -19,6 +19,16 @@ if [ ! -d "$TPM_LOCATION" ]; then
     git clone https://github.com/tmux-plugins/tpm $TPM_LOCATION 
 fi
 
+git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+
+FONTS_DIR=/fonts
+
+# Install powerline fonts
+if [ ! -d "$DOTFILES_DIRECTORY$FONTS_DIR" ]; then
+    git clone https://github.com/powerline/fonts
+    ./fonts/install.sh
+fi
+
 ln -sfv $DOTFILES_DIRECTORY/.vimrc ~
 ln -sfv $DOTFILES_DIRECTORY/.tmux.conf ~
 ln -sfv $DOTFILES_DIRECTORY/.tmuxline_snapshot.conf ~

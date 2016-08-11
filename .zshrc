@@ -1,5 +1,8 @@
+# For terminal to support 256 colors
+export TERM="xterm-256color"
+
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/emilteurnberg/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
 # Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="powerlevel9k/powerlevel9k"
@@ -51,7 +54,7 @@ plugins=(git meteor npm)
 
 # User configuration
 
-export PATH="/opt/local/bin:/opt/local/sbin:/Users/emilteurnberg/.gvm/vertx/current/bin:/Users/emilteurnberg/.gvm/springboot/current/bin:/Users/emilteurnberg/.gvm/lazybones/current/bin:/Users/emilteurnberg/.gvm/jbake/current/bin:/Users/emilteurnberg/.gvm/groovyserv/current/bin:/Users/emilteurnberg/.gvm/groovy/current/bin:/Users/emilteurnberg/.gvm/griffon/current/bin:/Users/emilteurnberg/.gvm/grails/current/bin:/Users/emilteurnberg/.gvm/gradle/current/bin:/Users/emilteurnberg/.gvm/glide/current/bin:/Users/emilteurnberg/.gvm/gaiden/current/bin:/Users/emilteurnberg/.gvm/crash/current/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+export PATH="/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -80,7 +83,7 @@ export EDITOR='vim'
 # For a full list of active aliases, run `alias`.
 alias cl="clear"
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
-alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
+#alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 
 # Powerlevel9k Config
 # Prompt segments
