@@ -12,7 +12,6 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'digitaltoad/vim-pug'
 Plugin 'edkolev/tmuxline.vim'
 
 " All of your Plugins must be added before the following line
@@ -39,18 +38,22 @@ set noshowmode " Hide the default mode text
 :nnoremap <C-A> :tabp<CR>
 :nmap <C-o> o<Esc>k
 :nmap <C-O> O<Esc>j
+" Removes all whitespace in current file, restores last search term too
+:nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 " }}}
 
 " Generic editor {{{
 filetype plugin indent on
 :set number
-:set tabstop=4
-:set shiftwidth=4
+:set tabstop=2
+:set shiftwidth=2
 :set expandtab
 
 " Removes trailing whitespace for certain filetypes
 autocmd FileType js,jsx,html autocmd BufWritePre <buffer> :%s/\s\+$//e
 " }}}
+
+set clipboard=unnamed
 
 " Autocompletion {{{
 filetype plugin on
