@@ -50,7 +50,7 @@ DEFAULT_USER="$USER"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git meteor npm)
+plugins=(git meteor npm tmux ubuntu)
 
 # User configuration
 
@@ -83,8 +83,6 @@ export EDITOR='vim'
 # For a full list of active aliases, run `alias`.
 alias cl="clear"
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
-alias tmls="tmux list-sessions"
-alias tma="tmux attach -t"
 #alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 
 # Powerlevel9k Config
