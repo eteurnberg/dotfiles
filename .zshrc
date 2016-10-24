@@ -83,6 +83,8 @@ export EDITOR='vim'
 # For a full list of active aliases, run `alias`.
 alias cl="clear"
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+alias tmls="tmux list-sessions"
+alias tma="tmux attach -t"
 #alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 
 # Powerlevel9k Config
