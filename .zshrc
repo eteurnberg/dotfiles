@@ -75,7 +75,9 @@ source $ZSH/oh-my-zsh.sh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 # path to avoid apples locked down usr/bin
-export PATH="/usr/local/bin:$PATH"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH="/usr/local/bin:$PATH"
+fi
 
 # Set default editor to vim
 export EDITOR='vim'
