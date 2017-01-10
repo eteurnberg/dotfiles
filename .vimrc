@@ -39,6 +39,8 @@ set noshowmode " Hide the default mode text
 :nnoremap <C-A> :tabp<CR>
 :nmap <C-o> o<Esc>k
 :nmap <C-O> O<Esc>j
+" Removes all whitespace in current file, restores last search term too
+:nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 " }}}
 
 " Generic editor {{{
