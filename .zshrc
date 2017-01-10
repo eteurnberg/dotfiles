@@ -50,11 +50,11 @@ DEFAULT_USER="$USER"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git meteor npm)
+plugins=(git npm tmux)
 
 # User configuration
 
-export PATH="/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+export PATH="$HOME/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -75,7 +75,9 @@ source $ZSH/oh-my-zsh.sh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 # path to avoid apples locked down usr/bin
-export PATH="/usr/local/bin:$PATH"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH="/usr/local/bin:$PATH"
+fi
 
 # Set default editor to vim
 export EDITOR='vim'

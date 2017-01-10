@@ -36,6 +36,9 @@ ln -sfv $DOTFILES_DIRECTORY/.zshrc ~
 ln -sfv $DOTFILES_DIRECTORY/.gitconfig ~
 ln -sfv $DOTFILES_DIRECTORY/.gitignore_global ~
 
+# Config git to use new global gitignore file
+git config --global core.excludesfile ~/.gitignore_global
+
 # Install Vundle plugins
 vim +PluginInstall +qall
 
