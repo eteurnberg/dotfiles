@@ -11,12 +11,12 @@ DOTFILES_DIRECTORY="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Install Vundle for vim, if not installed already
 if [ ! -d "$VUNDLE_LOCATION" ]; then
-    git clone https://github.com/VundleVim/Vundle.vim.git $VUNDLE_LOCATION 
+    git clone https://github.com/VundleVim/Vundle.vim.git $VUNDLE_LOCATION
 fi
 
 # Install Tmux Plugin Manager, if not installed already
 if [ ! -d "$TPM_LOCATION" ]; then
-    git clone https://github.com/tmux-plugins/tpm $TPM_LOCATION 
+    git clone https://github.com/tmux-plugins/tpm $TPM_LOCATION
 fi
 
 git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
