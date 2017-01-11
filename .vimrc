@@ -52,6 +52,9 @@ filetype plugin indent on
 
 " Removes trailing whitespace for certain filetypes
 autocmd FileType js,jsx,html autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+" Automatically wraps git commit message lines at 72 characters
+au FileType gitcommit set tw=72
 " }}}
 
 set clipboard=unnamed
