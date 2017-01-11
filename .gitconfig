@@ -2,7 +2,8 @@
 	name = Emil Teurnberg
 	email = e.teurnberg@gmail.com
 [core]
-	excludesfile = ./.gitignore_global
+	excludesfile = $HOME/.gitignore_global
+	editor = vim
 [push]
 	default = matching
 #[pager]
