@@ -64,8 +64,6 @@ set clipboard=unnamed
 " Autocompletion {{{
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
-
-
 " }}}
 
 " Swap files {{{
