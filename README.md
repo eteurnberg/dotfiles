@@ -13,6 +13,3 @@ The .gitconfig file is setup to use my user name and email, you will want to cha
 2. Run install.sh, you might have to run it as root.
 
 To update, pull the repo and run install.sh again.
-
-## To-do
-* Check for and install prerequisites.
