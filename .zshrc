@@ -86,8 +86,9 @@ export EDITOR='vim'
 alias cl="clear"
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 #alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
+
 # TEMPORARY ALIASES
-alias shproject='cd Development/sh-project/'
+alias shproject='cd Development/NodeJS/sh-project/'
 
 # Powerlevel9k Config
 # Prompt segments
