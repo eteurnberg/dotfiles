@@ -36,15 +36,18 @@ set noshowmode " Hide the default mode text
 " }}}
 
 " Key bindings {{{
-:inoremap jj <Esc>
-:nnoremap <C-X> :tabn<CR>
-:nnoremap <C-A> :tabp<CR>
-:nmap <C-o> o<Esc>k
-:nmap <C-O> O<Esc>j
+inoremap jj <Esc>
+nnoremap <C-X> :tabn<CR>
+nnoremap <C-A> :tabp<CR>
+nmap <C-o> o<Esc>k
+nmap <C-O> O<Esc>j
+
 " Removes all whitespace in current file, restores last search term too
-:nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
+nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
-
+" Move vertically by visual line
+nnoremap j gj
+nnoremap k gk
 " }}}
 
 " Generic editor {{{
@@ -55,6 +58,7 @@ filetype plugin indent on
 :set expandtab
 :set cursorline " Show a line indicator for where the cursor is
 :set wildmenu " Visual autocomplete for command menu
+:set showmatch " Highlight matching parenthesis
 
 " Removes trailing whitespace for certain filetypes
 autocmd FileType js,jsx,html autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -62,6 +66,11 @@ autocmd FileType js,jsx,html autocmd BufWritePre <buffer> :%s/\s\+$//e
 " Automatically wraps git commit message lines at 72 characters
 au FileType gitcommit set tw=72
 set clipboard=unnamed
+" }}}
+
+" Searching {{{
+" Turns of search highlight after search is done
+nnoremap <leader><space> :nohlsearch<CR>
 " }}}
 
 " Autocompletion {{{
