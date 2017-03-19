@@ -43,6 +43,8 @@ set noshowmode " Hide the default mode text
 :nmap <C-O> O<Esc>j
 " Removes all whitespace in current file, restores last search term too
 :nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
+
+
 " }}}
 
 " Generic editor {{{
@@ -51,6 +53,8 @@ filetype plugin indent on
 :set tabstop=2
 :set shiftwidth=2
 :set expandtab
+:set cursorline " Show a line indicator for where the cursor is
+:set wildmenu " Visual autocomplete for command menu
 
 " Removes trailing whitespace for certain filetypes
 autocmd FileType js,jsx,html autocmd BufWritePre <buffer> :%s/\s\+$//e
