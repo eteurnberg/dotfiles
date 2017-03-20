@@ -1,5 +1,3 @@
-" vim:fdm=marker
-
 " Vundle Initialisation {{{
 set nocompatible
 filetype off
@@ -35,6 +33,11 @@ set noshowmode " Hide the default mode text
 :let g:airline_theme='solarized'
 " }}}
 
+" ALE Configuration (ASync linting engine) {{{
+let g:ale_linters = {
+      \ 'javascript': ['eslint'],
+      \}
+" }}}
 " Key bindings {{{
 inoremap jj <Esc>
 nnoremap <C-X> :tabn<CR>
@@ -113,3 +116,6 @@ function! <SID>StripTrailingWhiteSpaces()
   call cursor(l, c)
 endfunction
 " }}}
+
+set modelines=1 " Last line of this file only applied to this file.
+" vim:fdm=marker:foldlevel=0
