@@ -1,3 +1,4 @@
+" Vim configuration by Emil Teurnberg
 " Vundle Initialisation {{{
 set nocompatible
 filetype off
@@ -38,6 +39,7 @@ let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \}
 " }}}
+
 " Key bindings {{{
 inoremap jj <Esc>
 nnoremap <C-X> :tabn<CR>

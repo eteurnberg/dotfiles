@@ -1,3 +1,5 @@
+# Zsh (oh-my-zsh) configuration by Emil Teurnberg
+
 # For terminal to support 256 colors
 export TERM="xterm-256color"
 
