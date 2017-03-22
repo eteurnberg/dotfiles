@@ -65,7 +65,9 @@ nnoremap k gk
 :set wildmenu " Visual autocomplete for command menu
 :set showmatch " Highlight matching parenthesis
 
-set clipboard=unnamed
+if $TMUX == ''
+  set clipboard=unnamed
+endif
 " }}}
 
 " Autogroups {{{
