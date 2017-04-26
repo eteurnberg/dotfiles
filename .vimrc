@@ -1,4 +1,5 @@
 " Vim configuration by Emil Teurnberg
+
 " Vundle Initialisation {{{
 set nocompatible
 filetype off
@@ -121,5 +122,6 @@ function! <SID>StripTrailingWhiteSpaces()
 endfunction
 " }}}
 
+" For file-specific  settings
 set modelines=1 " Last line of this file only applied to this file.
 " vim:fdm=marker:foldlevel=0
