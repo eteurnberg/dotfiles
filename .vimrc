@@ -37,6 +37,7 @@ set noshowmode " Hide the default mode text
 " ALE Configuration (ASync linting engine) {{{
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
+      \ 'html': ['HTMLHint'],
       \}
 " }}}
 
