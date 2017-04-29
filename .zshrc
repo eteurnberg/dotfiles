@@ -49,9 +49,15 @@ export EDITOR='vim'
 # For a full list of active aliases, run `alias`.
 alias cl="clear"
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+alias dotfiles="cd ~/Development/dotfiles/ && vim -p *.md *.sh .*"
 
-# TEMPORARY ALIASES
-alias shproject='cd ~/Development/NodeJS/sh-project/'
+# Alias for SH Project, depending on system
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias shproject="cd ~/Development/NodeJS/sh-project/"
+fi
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  alias shproject="cd ~/Development/sh-project/"
+fi
 
 # Powerlevel9k Config
 # Prompt segments
