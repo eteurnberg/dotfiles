@@ -50,8 +50,7 @@ nmap <C-O> O<Esc>j
 nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " Removes all whitespace in current file, restores last search term too
-nnoremap <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
-
+nnoremap <F5> :call <SID>StripTrailingWhiteSpaces()<CR>
 " Move vertically by visual line
 nnoremap j gj
 nnoremap k gk
