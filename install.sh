@@ -29,12 +29,12 @@ if [ ! -d "$DOTFILES_DIRECTORY$FONTS_DIR" ]; then
     ./fonts/install.sh
 fi
 
-ln -sfv $DOTFILES_DIRECTORY/.vimrc ~
-ln -sfv $DOTFILES_DIRECTORY/.tmux.conf ~
-ln -sfv $DOTFILES_DIRECTORY/.tmuxline_snapshot.conf ~
-ln -sfv $DOTFILES_DIRECTORY/.zshrc ~
-ln -sfv $DOTFILES_DIRECTORY/.gitconfig ~
-ln -sfv $DOTFILES_DIRECTORY/.gitignore_global ~
+ln -sfv "$DOTFILES_DIRECTORY/.vimrc" ~
+ln -sfv "$DOTFILES_DIRECTORY/.tmux.conf" ~
+ln -sfv "$DOTFILES_DIRECTORY/.tmuxline_snapshot.conf" ~
+ln -sfv "$DOTFILES_DIRECTORY/.zshrc" ~
+ln -sfv "$DOTFILES_DIRECTORY/.gitconfig" ~
+ln -sfv "$DOTFILES_DIRECTORY/.gitignore_global" ~
 
 # Config git to use new global gitignore file
 git config --global core.excludesfile ~/.gitignore_global
@@ -43,4 +43,4 @@ git config --global core.excludesfile ~/.gitignore_global
 vim +PluginInstall +qall
 
 # Change shell to zsh if not changed already
-chsh -s $(which zsh)
+chsh -s "$(which zsh)"

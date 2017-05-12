@@ -39,6 +39,7 @@ set noshowmode " Hide the default mode text
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'html': ['HTMLHint'],
+      \ 'bash': ['shellcheck'],
       \}
 " }}}
 
