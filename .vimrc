@@ -35,7 +35,7 @@ set noshowmode " Hide the default mode text
 :let g:airline_theme='solarized'
 " }}}
 
-" ALE Configuration (ASync linting engine) {{{
+" ALE Configuration (ASync Linting Engine) {{{
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'html': ['HTMLHint'],
