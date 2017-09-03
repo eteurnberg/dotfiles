@@ -31,6 +31,10 @@ plugins=(git npm tmux colored-man-pages)
 
 # User configuration
 
+# The absolute path of where this script is run
+export SCRIPT_PATH=${0:a:h}
+
+
 export PATH="$HOME/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 source $ZSH/oh-my-zsh.sh
@@ -49,7 +53,7 @@ export EDITOR='vim'
 # For a full list of active aliases, run `alias`.
 alias cl="clear"  # Short for clearing the terminal
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints a visual depiction of the directory tree from current dir
-alias dotfiles="cd ~/Development/dotfiles/ && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
+alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
 alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue with the ssh-agent, restart it and prompt for password again
 
 # Alias for SH Project, depending on system
