@@ -56,14 +56,6 @@ alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints 
 alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
 alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue with the ssh-agent, restart it and prompt for password again
 
-# Alias for SH Project, depending on system
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  alias shproject="cd ~/Development/NodeJS/sh-project/"
-fi
-if [[ "$OSTYPE" != "darwin"* ]]; then
-  alias shproject="cd ~/Development/sh-project/"
-fi
-
 # Powerlevel9k Config
 # Prompt segments
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs)
