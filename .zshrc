@@ -35,7 +35,7 @@ plugins=(git npm tmux colored-man-pages)
 export SCRIPT_PATH=${0:a:h}
 
 
-export PATH="$HOME/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+export PATH="$HOME/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$HOME/.cargo/bin"
 
 source $ZSH/oh-my-zsh.sh
 
