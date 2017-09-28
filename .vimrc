@@ -40,6 +40,7 @@ let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'html': ['HTMLHint'],
       \ 'bash': ['shellcheck'],
+      \ 'rust': ['rustc'],
       \}
 " }}}
 
