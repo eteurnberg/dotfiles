@@ -50,11 +50,19 @@ fi
 # Set default editor to vim
 export EDITOR='vim'
 
-# For a full list of active aliases, run `alias`.
+# ALIASES. To see full list, run 'alias'
+
+# Generic aliases
 alias cl="clear"  # Short for clearing the terminal
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints a visual depiction of the directory tree from current dir
-alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
 alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue with the ssh-agent, restart it and prompt for password again
+
+# Project specific aliases
+alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
+
+# Tool specific aliases
+alias cn="cargo new --bin"
+alias cr="cargo run"
 
 # Powerlevel9k Config
 # Prompt segments
