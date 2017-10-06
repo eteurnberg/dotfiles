@@ -48,8 +48,8 @@ let g:ale_linters = {
 inoremap jj <Esc>
 nnoremap <C-X> :tabn<CR>
 nnoremap <C-A> :tabp<CR>
-nmap <C-o> o<Esc>k
-nmap <C-O> O<Esc>j
+nmap <C-O> o<Esc>k
+nmap <C-P> O<Esc>j
 nnoremap <leader>sv :source $MYVIMRC<CR>
 
 " Removes all whitespace in current file, restores last search term too
