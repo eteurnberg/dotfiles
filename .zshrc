@@ -63,6 +63,7 @@ alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project fo
 # Tool specific aliases
 alias cnbin="cargo new --bin"
 alias cnlib="cargo new"
+alias cb="cargo build"
 alias cr="cargo run"
 
 # Powerlevel9k Config
