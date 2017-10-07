@@ -61,7 +61,8 @@ alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue wit
 alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
 
 # Tool specific aliases
-alias cn="cargo new --bin"
+alias cnbin="cargo new --bin"
+alias cnlib="cargo new"
 alias cr="cargo run"
 
 # Powerlevel9k Config
