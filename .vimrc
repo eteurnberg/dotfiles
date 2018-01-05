@@ -67,6 +67,7 @@ nnoremap k gk
 :set cursorline " Show a line indicator for where the cursor is
 :set wildmenu " Visual autocomplete for command menu
 :set showmatch " Highlight matching parenthesis
+:set hidden " Any buffer can be hidden, without changes being saved first
 
 if $TMUX == ''
   set clipboard=unnamed
