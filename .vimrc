@@ -74,12 +74,17 @@ if $TMUX == ''
 endif
 " }}}
 
-" Autogroups {{{
-augroup configgroup
+" File-type specific settings {{{
+augroup strip-trailing
   autocmd!
   autocmd BufWritePre *.php, *.js, *.jsx, *.html, *.txt, *.md, *.java, *.py, *.c, *.cpp
     \:call <SID>StripTrailingWhiteSpaces() " Strips trailing white space from files
-  au FileType gitcommit set tw=72 " Lines wrap at 72 chars in git commits (convention)
+augroup END
+
+" Make it easier to follow git convention by wrapping lines at 72 characters
+augroup wrap-git-commit-lines
+  autocmd!
+  au FileType gitcommit set tw=72
 augroup END
 
 " Overrides K in specific filetypes (for devdocs plugin search)
