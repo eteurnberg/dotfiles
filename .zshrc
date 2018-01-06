@@ -6,7 +6,7 @@ export TERM="xterm-256color"
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
-# Look in ~/.oh-my-zsh/themes/
+# The theme to use. Look in: ~/.oh-my-zsh/themes/
 ZSH_THEME="powerlevel9k/powerlevel9k"
 DEFAULT_USER="$USER"
 
@@ -68,11 +68,10 @@ alias cr="cargo run"
 
 # Powerlevel9k Config
 # Prompt segments
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status battery)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator time)
 
 # Segment customizations
-POWERLEVEL9K_BATTERY_LOW_THRESHOLD=15
 
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_DELIMITER=""
@@ -80,7 +79,7 @@ POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
 
 POWERLEVEL9K_STATUS_VERBOSE=false
 
-POWERLEVEL9K_TIME_FORMAT='%D{%H:%M}'
+POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 
 # Custom commands for opening files in browsers
 chrome () {
