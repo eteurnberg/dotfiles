@@ -68,6 +68,7 @@ nnoremap k gk
 :set wildmenu " Visual autocomplete for command menu
 :set showmatch " Highlight matching parenthesis
 :set hidden " Any buffer can be hidden, without changes being saved first
+:set nolist wrap linebreak breakat&vim " Line breaks at whitespace
 
 if $TMUX == ''
   set clipboard=unnamed
