@@ -41,6 +41,9 @@ let g:ale_linters = {
       \ 'html': ['HTMLHint'],
       \ 'bash': ['shellcheck'],
       \ 'rust': ['rustc'],
+      \ 'text': ['vale'],
+      \ 'markdown': ['vale'],
+      \ 'latex': ['vale'],
       \}
 " }}}
 
