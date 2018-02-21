@@ -73,6 +73,9 @@ nnoremap k gk
 :set hidden " Any buffer can be hidden, without changes being saved first
 :set nolist wrap linebreak breakat&vim " Line breaks at whitespace
 
+:set splitright " When doing a vertical split, split to the right
+:set splitbelow " When doing a horizontal split, create new window on the bottom
+
 if $TMUX == ''
   set clipboard=unnamed
 endif
