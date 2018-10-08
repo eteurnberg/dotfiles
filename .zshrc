@@ -86,6 +86,10 @@ chrome () {
     open -a "Google Chrome" "$1"
 }
 
+firefox () {
+    open -a "Firefox" "$1"
+}
+
 safari () {
     open -a "Safari" "$1"
 }
