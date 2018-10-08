@@ -35,7 +35,7 @@ plugins=(git npm tmux colored-man-pages)
 export SCRIPT_PATH=${0:a:h}
 
 # PATH Variable, order is important. optional python path added, OSX only.
-export PATH="/usr/local/opt/python/libexec/bin:$HOME/.cargo/bin:$HOME/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+export PATH="/usr/local/opt/python/libexec/bin:$HOME/.cargo/bin:$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 source $ZSH/oh-my-zsh.sh
 
