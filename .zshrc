@@ -37,15 +37,12 @@ export SCRIPT_PATH=${0:a:h}
 # PATH Variable, order is important. optional python path added, OSX only.
 export PATH="/usr/local/opt/python/libexec/bin:$HOME/.cargo/bin:$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
-source $ZSH/oh-my-zsh.sh
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
 # path to avoid apples locked down usr/bin
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
 fi
+
+source $ZSH/oh-my-zsh.sh
 
 # Set default editor to vim
 export EDITOR='vim'
