@@ -55,7 +55,7 @@ alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints 
 alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue with the ssh-agent, restart it and prompt for password again
 
 # Project specific aliases
-alias dotfiles="cd $SCRIPT_PATH && vim -p *.md *.sh .*" # Goes to the project folder for these files and opens all files
+alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles 
 
 # Tool specific aliases
 alias cnbin="cargo new --bin"
