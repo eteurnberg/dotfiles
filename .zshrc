@@ -37,6 +37,10 @@ export SCRIPT_PATH=${0:a:h}
 # PATH Variable, order is important. optional python path added, OSX only.
 export PATH="/usr/local/opt/python/libexec/bin:$HOME/.cargo/bin:$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
+# Set java version to 8
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+export PATH=${JAVA_HOME}/bin:$PATH
+
 # path to avoid apples locked down usr/bin
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
@@ -62,6 +66,8 @@ alias cnbin="cargo new --bin"
 alias cnlib="cargo new"
 alias cb="cargo build"
 alias cr="cargo run"
+
+alias octave="/usr/local/octave/3.8.0/bin/octave-3.8.0 ; exit;"
 
 # Powerlevel9k Config
 # Prompt segments
