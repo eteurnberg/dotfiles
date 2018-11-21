@@ -10,9 +10,6 @@ export ZSH=~/.oh-my-zsh
 ZSH_THEME="powerlevel9k/powerlevel9k"
 DEFAULT_USER="$USER"
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
 # Disables setting auto titles for terminal window.
 DISABLE_AUTO_TITLE="true"
 
@@ -50,6 +47,11 @@ source $ZSH/oh-my-zsh.sh
 
 # Set default editor to vim
 export EDITOR='vim'
+
+# Loading nvm (node version manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # ALIASES. To see full list, run 'alias'
 
