@@ -43,4 +43,4 @@ git config --global core.excludesfile ~/.gitignore_global
 vim +PluginInstall +qall
 
 # Change shell to zsh if not changed already
-chsh -s "$(which zsh)"
+chsh -s "$(command -v zsh)"
