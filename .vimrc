@@ -16,6 +16,7 @@ Plugin 'edkolev/tmuxline.vim'
 Plugin 'w0rp/ale'
 Plugin 'pangloss/vim-javascript'
 Plugin 'rhysd/devdocs.vim'
+Plugin 'ervandew/supertab'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
