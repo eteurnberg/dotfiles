@@ -88,13 +88,18 @@ alias brewup="brew update && brew upgrade"
 # Project specific aliases
 alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles 
 
-# Tool specific aliases
+# TOOL SPECIFIC
+# Rust
 alias cnbin="cargo new --bin"
 alias cnlib="cargo new"
 alias cb="cargo build"
 alias cr="cargo run"
 
+# Octave
 alias octave="/usr/local/octave/3.8.0/bin/octave-3.8.0 ; exit;"
+
+# Docker
+alias dockerka="docker stop $(docker ps -a -q)"
 
 # Powerlevel9k Config
 # Prompt segments
