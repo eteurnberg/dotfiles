@@ -99,7 +99,7 @@ alias cr="cargo run"
 alias octave="/usr/local/octave/3.8.0/bin/octave-3.8.0 ; exit;"
 
 # Docker
-alias dockerka="docker stop $(docker ps -a -q)"
+alias dockerka='docker stop $(docker ps -a -q)'
 
 # Powerlevel9k Config
 # Prompt segments
