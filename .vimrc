@@ -45,6 +45,7 @@ let g:ale_linters = {
       \ 'text': ['vale'],
       \ 'markdown': ['vale'],
       \ 'latex': ['vale'],
+      \ 'yaml': ['prettier'],
       \}
 " }}}
 

@@ -31,17 +31,26 @@ plugins=(git npm tmux colored-man-pages docker)
 # The absolute path of where this script is run
 export SCRIPT_PATH=${0:a:h}
 
-# PATH Variable, order is important. optional python path added, OSX only.
-export PATH="/usr/local/opt/python/libexec/bin:$HOME/.cargo/bin:$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+# $PATH variable config
 
-# Set java version to 8
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-export PATH=${JAVA_HOME}/bin:$PATH
+# Initial PATH. Normal bin locations in order of importance
+export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
-# path to avoid apples locked down usr/bin
+# If on MacOS, add additional bin location in front (used by Brew)
+# Useful to avoid locked down bin locations in MacOS
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
 fi
+
+# Add Cargo to the path (for Rust and associated tools)
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Add Anaconda3 python install location to path
+export PATH="$HOME/anaconda3/bin:$PATH"
+
+# Set Java version used to Java 8 and add it to path
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+export PATH=${JAVA_HOME}/bin:$PATH
 
 source $ZSH/oh-my-zsh.sh
 
