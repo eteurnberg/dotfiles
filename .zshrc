@@ -24,7 +24,7 @@ DISABLE_AUTO_TITLE="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git npm tmux colored-man-pages docker)
+plugins=(git npm tmux colored-man-pages docker docker-compose)
 
 # User configuration
 
@@ -46,7 +46,7 @@ fi
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Add Anaconda3 python install location to path
-export PATH="$HOME/anaconda3/bin:$PATH"
+# export PATH="$HOME/anaconda3/bin:$PATH"  # commented out by conda initialize
 
 # Set Java version used to Java 8 and add it to path
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
@@ -137,3 +137,25 @@ firefox () {
 safari () {
     open -a "Safari" "$1"
 }
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/emil.teurnberg/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/emil.teurnberg/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/emil.teurnberg/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/emil.teurnberg/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/emil.teurnberg/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emil.teurnberg/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/emil.teurnberg/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/emil.teurnberg/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
