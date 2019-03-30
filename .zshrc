@@ -32,14 +32,17 @@ plugins=(git npm tmux colored-man-pages docker docker-compose)
 export SCRIPT_PATH=${0:a:h}
 
 # $PATH variable config
+# ---------------------
 
 # Initial PATH. Normal bin locations in order of importance
 export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 # If on MacOS, add additional bin location in front (used by Brew)
 # Useful to avoid locked down bin locations in MacOS
+# Also add GNU grep tools to path, instead of standard. Downloaded using brew
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
+  export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 fi
 
 # Add Cargo to the path (for Rust and associated tools)
