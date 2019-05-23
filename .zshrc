@@ -158,7 +158,7 @@ unset __conda_setup
 
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/emil.teurnberg/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emil.teurnberg/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/emil.teurnberg/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emil.teurnberg/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/emil.teurnberg/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/emil.teurnberg/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/emil.teurnberg/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/emil.teurnberg/google-cloud-sdk/completion.zsh.inc'; fi
