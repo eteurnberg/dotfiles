@@ -128,6 +128,11 @@ POWERLEVEL9K_STATUS_VERBOSE=false
 
 POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 
+# Weather service
+wttr () {
+  curl wttr.in/"$1"
+}
+
 # Custom commands for opening files in browsers
 chrome () {
     open -a "Google Chrome" "$1"
