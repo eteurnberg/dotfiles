@@ -98,7 +98,7 @@ alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue wit
 alias brewup="brew update && brew upgrade"
 
 # Project specific aliases
-alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles 
+alias dotfiles="cd $HOME/$SCRIPT_PATH" # Goes to the project folder for all dotfiles 
 
 # TOOL SPECIFIC
 # Rust
