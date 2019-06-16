@@ -72,6 +72,10 @@ nnoremap k gk
 :set showmatch " Highlight matching parenthesis
 :set hidden " Any buffer can be hidden, without changes being saved first
 :set nolist wrap linebreak breakat&vim " Line breaks at whitespace
+ 
+" Normal behaviour for backspace
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
 
 :set splitright " When doing a vertical split, split to the right
 :set splitbelow " When doing a horizontal split, create new window on the bottom
