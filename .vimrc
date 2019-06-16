@@ -121,6 +121,10 @@ endif
 nnoremap <leader><space> :nohlsearch<CR>
 " Highlights last inserted text
 nnoremap gV `[v`]
+" Ignore case when searching
+set ignorecase
+" Be smart about cases
+set smartcase
 " }}}
 
 " Autocompletion {{{
