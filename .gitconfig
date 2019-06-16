@@ -2,7 +2,7 @@
 	name = Emil Teurnberg
 	email = e.teurnberg@gmail.com
 [core]
-	excludesfile = $HOME/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	editor = vim
 [push]
 	default = matching
@@ -10,3 +10,5 @@
 #	log = diff-highlight | less
 #	show = diff-highlight | less
 #	diff = diff-highlight | less
+[credential]
+	helper = osxkeychain
