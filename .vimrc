@@ -91,7 +91,7 @@ endif
 " File-type specific settings {{{
 augroup strip-trailing
   autocmd!
-  autocmd BufWritePre *.php, *.js, *.jsx, *.html, *.txt, *.md, *.java, *.py, *.c, *.cpp
+  autocmd BufWritePre *.php, *.js, *.jsx, *.html, *.txt, *.md, *.java, *.py, *.c, *.cpp, *.css, *.scss, .vimrc, .zshrc
     \:call <SID>StripTrailingWhiteSpaces() " Strips trailing white space from files
 augroup END
 
