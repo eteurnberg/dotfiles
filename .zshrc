@@ -29,7 +29,7 @@ plugins=(git mercurial npm tmux colored-man-pages docker docker-compose ng)
 # User configuration
 
 # The absolute path of where this script is run
-export SCRIPT_PATH=${0:a:h}
+export SCRIPT_PATH=${(%):-%N}
 
 # $PATH variable config
 # ---------------------
@@ -98,7 +98,7 @@ alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue wit
 alias brewup="brew update && brew upgrade"
 
 # Project specific aliases
-alias dotfiles="cd $HOME/$SCRIPT_PATH" # Goes to the project folder for all dotfiles 
+alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles 
 
 # TOOL SPECIFIC
 # Rust
