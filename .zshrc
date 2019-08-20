@@ -24,7 +24,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git mercurial npm tmux colored-man-pages docker docker-compose ng)
+plugins=(git mercurial npm tmux colored-man-pages docker docker-compose ng web-search)
 
 # User configuration
 
