@@ -113,6 +113,11 @@ alias octave="/usr/local/octave/3.8.0/bin/octave-3.8.0 ; exit;"
 # Docker
 alias dockerka='docker stop $(docker ps -a -q)'
 
+# Git
+
+# Ignore white space changes for a merge
+alias gmiws="git merge -Xignore-space-change"
+
 # Powerlevel9k Config
 # Prompt segments
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
