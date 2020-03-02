@@ -42,7 +42,7 @@ if [ ! -d "$DOTFILES_DIRECTORY$FONTS_DIR" ]; then
 fi
 
 for dotfile in "${dotfiles[@]}"; do
-  ln -sfv "${HOME}/${dotfile}" "$DOTFILES_DIRECTORY"
+  ln -sfv "$DOTFILES_DIRECTORY/${dotfile}" "${HOME}/${dotfile}"
 done
 
 # Config git to use new global gitignore file

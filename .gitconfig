@@ -2,7 +2,7 @@
 	name = Emil Teurnberg
 	email = e.teurnberg@gmail.com
 [core]
-	excludesfile = ~/.gitignore_global
+	excludesfile = /home/fuddh/.gitignore_global
 	editor = vim
 [push]
 	default = matching
