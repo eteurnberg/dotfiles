@@ -1,40 +1,41 @@
-" Vim configuration by Emil Teurnberg
+  " Vim configuration by Emil Teurnberg
 
-" Vundle Initialisation {{{
-set nocompatible
-filetype off
+  " Vundle Initialisation {{{
+  set nocompatible
+  filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+  set rtp+=~/.vim/bundle/Vundle.vim
+  call vundle#begin()
 
-Plugin 'VundleVim/Vundle.vim'
+  Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'w0rp/ale'
-Plugin 'pangloss/vim-javascript'
-Plugin 'rhysd/devdocs.vim'
-Plugin 'ervandew/supertab'
-Plugin 'airblade/vim-gitgutter'
+  Plugin 'vim-airline/vim-airline'
+  Plugin 'vim-airline/vim-airline-themes'
+  Plugin 'altercation/vim-colors-solarized'
+  Plugin 'edkolev/tmuxline.vim'
+  Plugin 'w0rp/ale'
+  Plugin 'pangloss/vim-javascript'
+  Plugin 'rhysd/devdocs.vim'
+  Plugin 'ervandew/supertab'
+  Plugin 'airblade/vim-gitgutter'
 
-" All of your Plugins must be added before the following line
-call vundle#end()
-filetype plugin indent on
-" }}}
+  " All of your Plugins must be added before the following line
+  call vundle#end()
+  filetype plugin indent on
+  " }}}
 
-" Solarized dark initialisation {{{
-syntax enable
-set background=dark
-colorscheme solarized
+  " Solarized dark initialisation {{{
+  syntax enable
+  set background=dark
+  colorscheme solarized
 let g:solarized_termcolors=256
 " }}}
 
 " Tabline related {{{
 set laststatus=2 " Always display the statusline in all windows
 set noshowmode " Hide the default mode text
-:let g:airline_theme='solarized'
+let g:airline_theme='solarized'
+let g:airline_solarized_bg='dark'
 " }}}
 
 " ALE Configuration (ASync Linting Engine) {{{

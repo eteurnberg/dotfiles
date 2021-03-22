@@ -2,7 +2,7 @@
 	name = Emil Teurnberg
 	email = e.teurnberg@gmail.com
 [core]
-	excludesfile = /home/fuddh/.gitignore_global
+	excludesfile = /Users/emte/.gitignore_global
 	editor = vim
 [push]
 	default = matching
@@ -17,3 +17,5 @@
 	conflictstyle = diff3
 [rerere]
 	enabled = true
+[pull]
+	rebase = true

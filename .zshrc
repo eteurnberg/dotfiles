@@ -24,7 +24,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git npm tmux colored-man-pages docker web-search vi-mode)
+plugins=(git npm tmux colored-man-pages docker docker-compose ng web-search kubectl vi-mode)
 
 # User configuration
 
@@ -115,6 +115,9 @@ alias cnlib="cargo new"
 alias cb="cargo build"
 alias cr="cargo run"
 
+# Node/NPM
+alias npmrs="npm run serve"
+
 # Octave
 alias octave="/usr/local/octave/3.8.0/bin/octave-3.8.0 ; exit;"
 
@@ -176,7 +179,7 @@ unset __conda_setup
 
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/emil.teurnberg/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emil.teurnberg/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/emte/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emte/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/emil.teurnberg/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/emil.teurnberg/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/emte/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/emte/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
