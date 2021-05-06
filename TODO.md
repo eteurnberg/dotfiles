@@ -1,8 +1,8 @@
 ## TODO
 
-2. Refresh colour scheme slightly.
-3. Check for prerequisites when installing.
+1. Update tmux config for latest version of tmux
+2. Set up predefined tmux workspaces as config
+3. Set up coq.vim for autocomplete in vim
+4. Investigate C# functionality in vim
+5. Add tools for english prose checking
 
-### Long term
-
-1. Investigate the potential of tmux configuration more thoroughly (in progress).
