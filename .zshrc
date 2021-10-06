@@ -43,6 +43,7 @@ export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
   export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
+  export PATH="/Library/Frameworks/Mono.framework/Versions/Current/bin/:${PATH}"
 fi
 
 # If on a linux system, add snap binary path
