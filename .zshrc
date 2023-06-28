@@ -24,7 +24,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git npm tmux colored-man-pages docker docker-compose ng web-search kubectl vi-mode)
+plugins=(git npm tmux colored-man-pages web-search kubectl vi-mode)
 
 # User configuration
 
@@ -41,9 +41,11 @@ export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 # Useful to avoid locked down bin locations in MacOS
 # Also add GNU grep tools to path, instead of standard. Downloaded using brew
 if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
   export PATH="/usr/local/bin:$PATH"
   export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
   export PATH="/Library/Frameworks/Mono.framework/Versions/Current/bin/:${PATH}"
+  export PATH="/usr/local/share/dotnet:$PATH"
 fi
 
 # If on a linux system, add snap binary path

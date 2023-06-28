@@ -1,28 +1,46 @@
 [user]
 	name = Emil Teurnberg
 	email = e.teurnberg@gmail.com
+
 [core]
 	excludesfile = $HOME/.gitignore_global
 	editor = vim
+  pager = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true
+  line-numbers = true
+
 [push]
 	default = matching
-#[pager]
-#	log = diff-highlight | less
-#	show = diff-highlight | less
-#	diff = diff-highlight | less
+
+[pull]
+	rebase = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+  colorMoved = default
+
+[rerere]
+	enabled = true
+
+[fetch]
+	prune = true
+
 [credential]
 	helper = osxkeychain
 	helper = !/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/jre/bin/java -Ddebug=false -Djava.net.useSystemProxies=true -jar /usr/local/Cellar/git-credential-manager/2.0.4/libexec/git-credential-manager-2.0.4.jar
-[merge]
-	conflictstyle = diff3
-[rerere]
-	enabled = true
-[pull]
-	rebase = true
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[fetch]
-	prune = true
+
+[init]
+	defaultBranch = master
