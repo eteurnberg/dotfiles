@@ -11,7 +11,7 @@
 
   Plugin 'vim-airline/vim-airline'
   Plugin 'vim-airline/vim-airline-themes'
-  Plugin 'altercation/vim-colors-solarized'
+  Plugin 'lifepillar/vim-solarized8'
   Plugin 'edkolev/tmuxline.vim'
   Plugin 'w0rp/ale'
   Plugin 'pangloss/vim-javascript'
@@ -26,9 +26,11 @@
 
   " Solarized dark initialisation {{{
   syntax enable
+  if has('termguicolors')
+    set termguicolors
+  endif
   set background=dark
-  colorscheme solarized
-let g:solarized_termcolors=256
+  colorscheme solarized8
 " }}}
 
 " Tabline related {{{
