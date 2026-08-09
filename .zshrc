@@ -118,11 +118,6 @@ alias npmrs="npm run serve"
 # Docker
 alias dockerka='docker stop $(docker ps -a -q)'
 
-# Git
-
-# Ignore white space changes for a merge
-alias gmiws="git merge -Xignore-space-change"
-
 # Powerlevel9k Config
 # Prompt segments
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
