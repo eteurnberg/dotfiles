@@ -1,3 +1,23 @@
 *~
 .DS_Store
 *.swp
+
+**/.claude/settings.local.json
+
+# Secrets & credentials — never commit these
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.ppk
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+
+# ...but allow committed templates/examples
+!.env.example
+!.env.sample
+!.env.template
