@@ -16,7 +16,7 @@
   Plugin 'w0rp/ale'
   Plugin 'pangloss/vim-javascript'
   Plugin 'rhysd/devdocs.vim'
-  Plugin 'ervandew/supertab'
+  Plugin 'neoclide/coc.nvim'
   Plugin 'airblade/vim-gitgutter'
 
   " All of your Plugins must be added before the following line
@@ -41,6 +41,8 @@ let g:airline_solarized_bg='dark'
 " }}}
 
 " ALE Configuration (ASync Linting Engine) {{{
+" Real diagnostics for languages with a coc.nvim extension now come from
+" coc instead; ALE stays for linters coc doesn't cover.
 let g:ale_linters = {
       \ 'javascript': ['eslint'],
       \ 'html': ['HTMLHint'],
@@ -51,6 +53,53 @@ let g:ale_linters = {
       \ 'latex': ['vale'],
       \ 'yaml': ['prettier'],
       \}
+" }}}
+
+" CoC (Conquer of Completion) {{{
+" Extensions to keep installed; coc.nvim installs/updates these itself.
+let g:coc_global_extensions = ['coc-tsserver', 'coc-omnisharp', 'coc-json']
+
+set updatetime=300   " Faster diagnostic/highlight updates (coc recommendation)
+set shortmess+=c     " Don't show "match x of y" completion messages
+set signcolumn=yes   " Always show the sign column so diagnostics don't shift text
+
+" Tab to cycle the completion popup, Enter to confirm
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CocCheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>"
+
+function! CocCheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1] =~# '\s'
+endfunction
+
+" Navigation
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Hover docs on K, falling back to plain K (e.g. devdocs.vim's mapping,
+" or vim help) for filetypes without a coc extension/hover provider
+nnoremap <silent> K :call CocShowDocumentation()<CR>
+function! CocShowDocumentation() abort
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" Rename symbol, jump between diagnostics, code actions, format selection
+nmap <leader>rn <Plug>(coc-rename)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <leader>ca <Plug>(coc-codeaction-cursor)
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 " }}}
 
 " Key bindings {{{
@@ -104,10 +153,11 @@ augroup wrap-git-commit-lines
   au FileType gitcommit set tw=72
 augroup END
 
-" Overrides K in specific filetypes (for devdocs plugin search)
+" Overrides K in specific filetypes without a coc extension (for devdocs
+" plugin search). javascript is handled by coc's hover instead.
 augroup plugin-devdocs
   autocmd!
-  autocmd FileType c,rust,haskell,javascript nmap <buffer>K <Plug>(devdocs-under-cursor)
+  autocmd FileType c,rust,haskell nmap <buffer>K <Plug>(devdocs-under-cursor)
 augroup END
 " }}}
 

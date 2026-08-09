@@ -6,6 +6,7 @@ export DOTFILES_DIRECTORY
 
 # Variables, make any wanted changes here
 VUNDLE_LOCATION=~/.vim/bundle/Vundle.vim
+COC_LOCATION=~/.vim/bundle/coc.nvim
 TPM_LOCATION=~/.tmux/plugins/tpm
 OH_MY_ZSH_LOCATION=~/.oh-my-zsh
 OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
@@ -43,6 +44,14 @@ fi
 # Install Vundle for vim, if not installed already
 if [ ! -d "$VUNDLE_LOCATION" ]; then
     git clone https://github.com/VundleVim/Vundle.vim.git "$VUNDLE_LOCATION"
+fi
+
+# Install coc.nvim, if not installed already. Cloned directly (rather than
+# left to Vundle's PluginInstall) pinned to the "release" branch, which
+# ships pre-built JS -- the default branch is TypeScript source that needs
+# a yarn build step. Vundle has no way to pin a branch in a Plugin line.
+if [ ! -d "$COC_LOCATION" ]; then
+    git clone --branch release --single-branch https://github.com/neoclide/coc.nvim.git "$COC_LOCATION"
 fi
 
 # Install Tmux Plugin Manager, if not installed already
