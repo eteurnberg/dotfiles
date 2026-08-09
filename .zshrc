@@ -47,6 +47,7 @@ export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 # Useful to avoid locked down bin locations in MacOS
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
+  eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 fi
 
 # If on a linux system, add snap binary path
@@ -56,6 +57,9 @@ fi
 
 # Add Cargo to the path (for Rust and associated tools)
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# Add .NET Core SDK tools
+export PATH="$PATH:$HOME/.dotnet/tools"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -152,3 +156,20 @@ safari () {
     open -a "Safari" "$1"
 }
 
+dotnet() {
+  if [[ "$1" == "ef" && "$PWD" == "$HOME/Dev/mavatar"(|/*) ]]; then
+    command dotnet ef "${@:2}" \
+      --project ./src/Infrastructure/ \
+      --startup-project ./src/Api/
+  else
+    command dotnet "$@"
+  fi
+}
+
+create_mimer_token() {
+  if [ -z "${WORK_EMAIL:-}" ]; then
+    echo "WORK_EMAIL is not set -- add it to ~/.zshrc.local" >&2
+    return 1
+  fi
+  command mimer-token --org 1 --user 7 --email "$WORK_EMAIL" --role admin
+}
