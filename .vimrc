@@ -92,8 +92,8 @@ endif
 " File-type specific settings {{{
 augroup strip-trailing
   autocmd!
-  autocmd BufWritePre *.php, *.js, *.jsx, *.html, *.txt, *.md, *.java, *.py, *.c, *.cpp, *.css, *.scss, .vimrc, .zshrc
-    \:call <SID>StripTrailingWhiteSpaces() " Strips trailing white space from files
+  autocmd BufWritePre *.php,*.js,*.jsx,*.html,*.txt,*.md,*.java,*.py,*.c,*.cpp,*.css,*.scss,.vimrc,.zshrc
+    \ :call <SID>StripTrailingWhiteSpaces() " Strips trailing white space from files
 augroup END
 
 " Make it easier to follow git convention by wrapping lines at 72 characters
