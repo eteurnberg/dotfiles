@@ -51,13 +51,6 @@ fi
 # Add Cargo to the path (for Rust and associated tools)
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Set Java version used to Java 8 and add it to path
-# Only if java_home exists (java is installed)
-if [[ -f "/usr/libexec/java_home" ]]; then
-  export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-  export PATH=${JAVA_HOME}/bin:$PATH
-fi
-
 source $ZSH/oh-my-zsh.sh
 
 # Set default editor to vim
