@@ -96,8 +96,11 @@ if [ -d "$BACKUP_DIR" ]; then
     echo "Backed up pre-existing files to $BACKUP_DIR"
 fi
 
-# Config git to use new global gitignore file
-git config --global core.excludesfile ~/.gitignore_global
+# Config git to use new global gitignore file. Quoted so the shell doesn't
+# expand the tilde before git sees it -- git expands ~/ itself when reading
+# config, so this stays portable across machines/usernames instead of
+# baking in an absolute path.
+git config --global core.excludesfile '~/.gitignore_global'
 
 # Install Vundle plugins, if vim is installed
 if command -v vim >/dev/null 2>&1; then
