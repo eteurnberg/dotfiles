@@ -5,7 +5,7 @@
 	excludesfile = $HOME/.gitignore_global
 	editor = vim
 [push]
-	default = matching
+	default = simple
 #[pager]
 #	log = diff-highlight | less
 #	show = diff-highlight | less
@@ -13,7 +13,7 @@
 [credential]
 	helper = osxkeychain
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 [rerere]
 	enabled = true
 [pull]
