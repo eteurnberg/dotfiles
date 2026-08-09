@@ -55,6 +55,23 @@ if [ ! -d "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION" ]; then
     git clone https://github.com/bhilburn/powerlevel9k.git "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION"
 fi
 
+# Install third-party oh-my-zsh plugins referenced in .zshrc's plugins=(),
+# if not already installed. Entries are "install dir name|git url".
+ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
+zsh_plugins=(
+    "zsh-autosuggestions|https://github.com/zsh-users/zsh-autosuggestions"
+    "zsh-syntax-highlighting|https://github.com/zsh-users/zsh-syntax-highlighting"
+    "zsh-completions|https://github.com/zsh-users/zsh-completions"
+    "you-should-use|https://github.com/MichaelAquilina/zsh-you-should-use.git"
+)
+for entry in "${zsh_plugins[@]}"; do
+    plugin_dir="${entry%%|*}"
+    plugin_url="${entry#*|}"
+    if [ ! -d "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir" ]; then
+        git clone --depth 1 "$plugin_url" "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir"
+    fi
+done
+
 # Install powerline fonts, if not installed already
 if [ ! -d "$FONTS_DIR" ]; then
     git clone https://github.com/powerline/fonts "$FONTS_DIR"
