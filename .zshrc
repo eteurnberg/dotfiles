@@ -39,11 +39,8 @@ export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 
 # If on MacOS, add additional bin location in front (used by Brew)
 # Useful to avoid locked down bin locations in MacOS
-# Also add GNU grep tools to path, instead of standard. Downloaded using brew
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PATH="/usr/local/bin:$PATH"
-  export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
-  export PATH="/Library/Frameworks/Mono.framework/Versions/Current/bin/:${PATH}"
 fi
 
 # If on a linux system, add snap binary path
@@ -53,9 +50,6 @@ fi
 
 # Add Cargo to the path (for Rust and associated tools)
 export PATH="$HOME/.cargo/bin:$PATH"
-
-# Add Anaconda3 python install location to path
-# export PATH="$HOME/anaconda3/bin:$PATH"  # commented out by conda initialize
 
 # Set Java version used to Java 8 and add it to path
 # Only if java_home exists (java is installed)
@@ -119,9 +113,6 @@ alias cr="cargo run"
 # Node/NPM
 alias npmrs="npm run serve"
 
-# Octave
-alias octave="/usr/local/octave/3.8.0/bin/octave-3.8.0 ; exit;"
-
 # Docker
 alias dockerka='docker stop $(docker ps -a -q)'
 
@@ -163,24 +154,3 @@ safari () {
     open -a "Safari" "$1"
 }
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/emil.teurnberg/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/emil.teurnberg/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/emil.teurnberg/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/emil.teurnberg/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/emte/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/emte/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/emte/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/emte/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
