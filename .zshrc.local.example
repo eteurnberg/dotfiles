@@ -1,0 +1,5 @@
+# Copy this file to ~/.zshrc.local and fill in real values.
+# ~/.zshrc.local is machine/personal-specific and is never tracked in this
+# repo -- .zshrc sources it automatically if present.
+
+export WORK_EMAIL="you@example.com"
