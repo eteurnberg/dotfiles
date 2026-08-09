@@ -95,7 +95,6 @@ load-nvmrc
 # Generic aliases
 alias cl="clear"  # Short for clearing the terminal
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints a visual depiction of the directory tree from current dir
-alias ssh-restart="eval \"\$(ssh-agent)\" && ssh-add" # When theres an issue with the ssh-agent, restart it and prompt for password again
 
 # OS X specific alias
 alias brewup="brew update && brew upgrade"
