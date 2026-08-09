@@ -1,5 +1,9 @@
 # Zsh (oh-my-zsh) configuration by Emil Teurnberg
 
+# Machine/personal-specific values (emails, tokens, etc.) not tracked in the
+# dotfiles repo. See .zshrc.local.example for the expected shape.
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
 # For terminal to support 256 colors
 export TERM="xterm-256color"
 
