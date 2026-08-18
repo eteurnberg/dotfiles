@@ -101,6 +101,11 @@ if [ -d "$CLAUDE_DIR" ]; then
     done
 fi
 
+# Symlink lazygit's config file specifically, since ~/.config/lazygit could
+# hold other runtime state alongside it
+mkdir -p "${HOME}/.config/lazygit"
+link_dotfile "$DOTFILES_DIRECTORY/lazygit-config.yml" "${HOME}/.config/lazygit/config.yml"
+
 if [ -d "$BACKUP_DIR" ]; then
     echo "Backed up pre-existing files to $BACKUP_DIR"
 fi

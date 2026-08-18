@@ -4,12 +4,15 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = vim
+	pager = delta
 [push]
 	default = simple
-#[pager]
-#	log = diff-highlight | less
-#	show = diff-highlight | less
-#	diff = diff-highlight | less
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = Solarized (dark)
 [credential]
 	helper = osxkeychain
 [merge]
