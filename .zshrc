@@ -37,34 +37,7 @@ plugins=(git npm tmux colored-man-pages docker docker-compose ng web-search kube
 # The absolute path of where this script is run
 export SCRIPT_PATH=${(%):-%N}
 
-# $PATH variable config
-# ---------------------
-
-# Initial PATH. Normal bin locations in order of importance
-export PATH="$HOME/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
-
-# If on MacOS, add additional bin location in front (used by Brew)
-# Useful to avoid locked down bin locations in MacOS
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export PATH="/usr/local/bin:$PATH"
-  eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-fi
-
-# If on a linux system, add snap binary path
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  export PATH="/snap/bin:$PATH"
-fi
-
-# Add Cargo to the path (for Rust and associated tools)
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# Add .NET Core SDK tools
-export PATH="$PATH:$HOME/.dotnet/tools"
-
 source $ZSH/oh-my-zsh.sh
-
-# Set default editor to vim
-export EDITOR='vim'
 
 # Loading nvm (node version manager)
 export NVM_DIR="$HOME/.nvm"
@@ -91,7 +64,7 @@ load-nvmrc() {
   fi
 }
 add-zsh-hook chpwd load-nvmrc
-load-nvmrc   
+load-nvmrc
 
 # ALIASES. To see full list, run 'alias'
 
@@ -103,7 +76,7 @@ alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints 
 alias brewup="brew update && brew upgrade"
 
 # Project specific aliases
-alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles 
+alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles
 
 # TOOL SPECIFIC
 # Rust
@@ -168,3 +141,4 @@ create_mimer_token() {
   fi
   command mimer-token --org 1 --user 7 --email "$WORK_EMAIL" --role admin
 }
+

@@ -17,7 +17,7 @@ DOTFILES_DIRECTORY="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FONTS_DIR="$DOTFILES_DIRECTORY/fonts"
 
 # List of dotfiles being kept track of
-dotfiles=(".vimrc" ".tmux.conf" ".tmuxline_snapshot.conf" ".zshrc" ".gitconfig" ".gitignore_global")
+dotfiles=(".vimrc" ".tmux.conf" ".tmuxline_snapshot.conf" ".zshenv" ".zprofile" ".zshrc" ".gitconfig" ".gitignore_global")
 
 # Where pre-existing real files get moved before being replaced by a symlink
 BACKUP_DIR="${HOME}/.dotfiles_backup/$(date +%Y%m%d%H%M%S)"
