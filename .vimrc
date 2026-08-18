@@ -19,6 +19,7 @@
   Plugin 'neoclide/coc.nvim'
   Plugin 'airblade/vim-gitgutter'
   Plugin 'tpope/vim-fugitive'
+  Plugin 'tpope/vim-rhubarb'
 
   " All of your Plugins must be added before the following line
   call vundle#end()
@@ -116,6 +117,10 @@ nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gd :Gdiffsplit<CR>
 nnoremap <leader>gb :Git blame<CR>
 nnoremap <leader>gl :Gclog<CR>
+
+" vim-rhubarb: open the current file/line(s) on GitHub
+nnoremap <leader>gh :GBrowse<CR>
+xnoremap <leader>gh :GBrowse<CR>
 
 " Removes all whitespace in current file, restores last search term too
 nnoremap <F5> :call <SID>StripTrailingWhiteSpaces()<CR>
