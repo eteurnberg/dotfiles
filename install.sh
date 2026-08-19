@@ -91,9 +91,14 @@ for dotfile in "${dotfiles[@]}"; do
   link_dotfile "$DOTFILES_DIRECTORY/${dotfile}" "${HOME}/${dotfile}"
 done
 
-# Symlink individual files from .claude rather than the directory itself, since
-# ~/.claude also holds Claude Code's own runtime data (history, cache, settings.json, plugins, ...)
-CLAUDE_DIR="$DOTFILES_DIRECTORY/.claude"
+# Symlink individual files from claude-global/ (not .claude/ itself, since
+# ~/.claude also holds Claude Code's own runtime data -- history, cache,
+# settings.json, plugins, ...) into ~/.claude/. Only files meant to apply to
+# every project on this machine belong in claude-global/; anything specific
+# to working on this dotfiles repo (e.g. .claude/settings.local.json,
+# .claude/settings.json) stays in .claude/ and is picked up automatically as
+# this project's own settings, without ever being symlinked to $HOME.
+CLAUDE_DIR="$DOTFILES_DIRECTORY/claude-global"
 if [ -d "$CLAUDE_DIR" ]; then
     mkdir -p "${HOME}/.claude"
     for claude_file in "$CLAUDE_DIR"/*; do
