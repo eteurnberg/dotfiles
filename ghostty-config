@@ -1,0 +1,3 @@
+# Solarized Dark, matching the colorscheme already used for vim (solarized8),
+# tmuxline and git's delta pager elsewhere in this repo
+theme = iTerm2 Solarized Dark

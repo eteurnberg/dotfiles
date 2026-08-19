@@ -8,6 +8,8 @@ _NOTE:_ The install script should now install these automatically.
 
 [delta](https://github.com/dandavison/delta) and [lazygit](https://github.com/jesseduffield/lazygit) are needed too -- `.gitconfig` sets `core.pager = delta`, so git diff output will fail to render without it. Install both via your system's package manager (e.g. `brew install git-delta lazygit`); the install script doesn't install packages, only plugin managers/plugins.
 
+[Ghostty](https://ghostty.org) is used as the terminal emulator. `ghostty-config` is symlinked to `~/.config/ghostty/config` and sets the Solarized Dark theme to match vim/tmux/delta; Ghostty itself isn't installed by install.sh.
+
 ## Installing
 _NOTE:_ Backup any dotfiles you already have before installing. The symlinking will remove any files you might already have with the same names.
 The .gitconfig file is setup to use my user name and email, you will want to change this.
