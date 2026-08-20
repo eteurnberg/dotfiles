@@ -1,0 +1,14 @@
+{
+  "ale": { "branch": "master", "commit": "1c6e71732f3811197ec21cd6d3130791955ca80a" },
+  "coc.nvim": { "branch": "release", "commit": "d7cf12d0dc873fcd276e89dff4e7c4949e3e5793" },
+  "devdocs.vim": { "branch": "master", "commit": "1c91c619874f11f2062f80e6ca4b49456f21ae91" },
+  "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
+  "tmuxline.vim": { "branch": "master", "commit": "4119c553923212cc67f4e135e6f946dc3ec0a4d6" },
+  "vim-airline": { "branch": "master", "commit": "a2fefe599378b4a493287d10501f51e224753690" },
+  "vim-airline-themes": { "branch": "master", "commit": "77aab8c6cf7179ddb8a05741da7e358a86b2c3ab" },
+  "vim-fugitive": { "branch": "master", "commit": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0" },
+  "vim-gitgutter": { "branch": "main", "commit": "90b75207bd9b55d8ac4af15f72b4e935462014d0" },
+  "vim-javascript": { "branch": "master", "commit": "b26c9edb3563e02f5c0b20580f7cf9743e95b157" },
+  "vim-rhubarb": { "branch": "master", "commit": "5496d7c94581c4c9ad7430357449bb57fc59f501" },
+  "vim-solarized8": { "branch": "master", "commit": "4433b4411de92b2446a4d32f0d8bf1b25c476bf9" }
+}

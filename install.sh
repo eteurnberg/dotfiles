@@ -126,6 +126,14 @@ link_dotfile "$DOTFILES_DIRECTORY/lazygit-config.yml" "${HOME}/.config/lazygit/c
 mkdir -p "${HOME}/.config/ghostty"
 link_dotfile "$DOTFILES_DIRECTORY/ghostty-config" "${HOME}/.config/ghostty/config"
 
+# Symlink the whole nvim/ directory as one unit, unlike the per-file
+# treatment above -- Neovim's XDG layout keeps all plugin/cache/state data
+# under ~/.local/share/nvim and ~/.local/state/nvim, never inside
+# ~/.config/nvim itself, so nothing untracked can ever need to coexist
+# there the way Claude Code's or lazygit's runtime data does.
+mkdir -p "${HOME}/.config"
+link_dotfile "$DOTFILES_DIRECTORY/nvim" "${HOME}/.config/nvim"
+
 if [ -d "$BACKUP_DIR" ]; then
     echo "Backed up pre-existing files to $BACKUP_DIR"
 fi
@@ -139,6 +147,13 @@ git config --global core.excludesfile '~/.gitignore_global'
 # Install Vundle plugins, if vim is installed
 if command -v vim >/dev/null 2>&1; then
     vim +PluginInstall +qall
+fi
+
+# Install/sync lazy.nvim-managed Neovim plugins, if nvim is installed. Runs
+# headless so a fresh machine bootstraps fully non-interactively, same role
+# the vim +PluginInstall line above plays for Vundle.
+if command -v nvim >/dev/null 2>&1; then
+    nvim --headless "+Lazy! sync" +qa
 fi
 
 # Change shell to zsh if not changed already. chsh requires the target to
