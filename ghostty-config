@@ -1,3 +1,7 @@
 # Solarized Dark, matching the colorscheme already used for vim (solarized8),
 # tmuxline and git's delta pager elsewhere in this repo
 theme = iTerm2 Solarized Dark
+
+# Nerd Font (Mono variant -- fixed single-cell icon glyph width); superset
+# of the plain Powerline fonts, so tmux/zsh-prompt separators still render
+font-family = "MesloLGS Nerd Font Mono"

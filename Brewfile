@@ -18,3 +18,8 @@ brew "fd"
 
 # GUI terminal emulator
 cask "ghostty"    # ghostty-config is symlinked to ~/.config/ghostty/config
+
+# Nerd Font, for icons in eza/lazygit and Powerline-style separators in
+# tmux/vim-airline/the zsh prompt (superset of the plain Powerline fonts
+# already cloned by install.sh -- no regression for either existing use)
+cask "font-meslo-lg-nerd-font"

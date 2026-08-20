@@ -71,11 +71,11 @@ load-nvmrc
 # Generic aliases
 alias cl="clear"  # Short for clearing the terminal
 alias cat="bat --paging=never"  # Syntax-highlighted, line-numbered cat; use `bat` directly for paging
-alias ls="eza"  # Git-aware, colorized directory listing; use /bin/ls for the literal original
-alias l="eza -lah"    # Was oh-my-zsh's l='ls -lah'; explicit, doesn't rely on ls-alias chaining
-alias ll="eza -lh"    # Was oh-my-zsh's ll='ls -lh'
-alias la="eza -lAh"   # Was oh-my-zsh's la='ls -lAh'
-alias lsa="eza -lah"  # Was oh-my-zsh's lsa='ls -lah' (identical to l, kept for parity)
+alias ls="eza --icons"  # Git-aware, colorized directory listing; use /bin/ls for the literal original
+alias l="eza --icons -lah"    # Was oh-my-zsh's l='ls -lah'; explicit, doesn't rely on ls-alias chaining
+alias ll="eza --icons -lh"    # Was oh-my-zsh's ll='ls -lh'
+alias la="eza --icons -lAh"   # Was oh-my-zsh's la='ls -lAh'
+alias lsa="eza --icons -lah"  # Was oh-my-zsh's lsa='ls -lah' (identical to l, kept for parity)
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints a visual depiction of the directory tree from current dir
 
 # OS X specific alias
