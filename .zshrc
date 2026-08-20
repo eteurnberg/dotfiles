@@ -71,6 +71,7 @@ load-nvmrc
 # Generic aliases
 alias cl="clear"  # Short for clearing the terminal
 alias cat="bat --paging=never"  # Syntax-highlighted, line-numbered cat; use `bat` directly for paging
+alias ls="eza"  # Git-aware, colorized directory listing; use /bin/ls for the literal original
 alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints a visual depiction of the directory tree from current dir
 
 # OS X specific alias
