@@ -8,6 +8,8 @@ _NOTE:_ The install script should now install these automatically.
 
 [delta](https://github.com/dandavison/delta), [lazygit](https://github.com/jesseduffield/lazygit) and [bat](https://github.com/sharkdp/bat) are needed too -- `.gitconfig` sets `core.pager = delta`, so git diff output will fail to render without it, and `.zshrc` aliases `cat` to `bat` for syntax-highlighted, line-numbered file output. Install all three via your system's package manager (e.g. `brew install git-delta lazygit bat`); the install script doesn't install packages, only plugin managers/plugins.
 
+[ripgrep](https://github.com/BurntSushi/ripgrep) and [fd](https://github.com/sharkdp/fd) are also used (as `rg` and `fd`) for faster search and find -- unlike the above, no tracked config depends on them, they're just recommended (`brew install ripgrep fd`).
+
 [Ghostty](https://ghostty.org) is used as the terminal emulator. `ghostty-config` is symlinked to `~/.config/ghostty/config` and sets the Solarized Dark theme to match vim/tmux/delta; Ghostty itself isn't installed by install.sh.
 
 ## Installing
