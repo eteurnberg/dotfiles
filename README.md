@@ -2,15 +2,13 @@
 My configuration files. I use zshell with oh-my-zsh, vim and tmux. The goal is for these files to work on both OS X and Ubuntu. These are mainly kept here to be accessible to myself, but you are welcome to use and try them if you like.
 
 ## Prerequisites
-zsh, oh-my-zsh, vim, tmux and git needed. 
-For the agnoster theme in oh-my-zsh to work properly patched fonts are needed. The recommeneded way to achieve this is to install [Powerline-fonts](https://github.com/powerline/fonts).
-_NOTE:_ The install script should now install these automatically.
+[Homebrew](https://brew.sh) needs to be installed already. Given that, running `install.sh` installs everything else automatically from the tracked `Brewfile`: zsh, vim, tmux, git, [delta](https://github.com/dandavison/delta), [lazygit](https://github.com/jesseduffield/lazygit), [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [ripgrep](https://github.com/BurntSushi/ripgrep), [fd](https://github.com/sharkdp/fd) and [Ghostty](https://ghostty.org). Without Homebrew, install these manually via your system's package manager instead -- `install.sh` skips the Brewfile step entirely if `brew` isn't on `PATH`.
 
-[delta](https://github.com/dandavison/delta), [lazygit](https://github.com/jesseduffield/lazygit), [bat](https://github.com/sharkdp/bat) and [eza](https://github.com/eza-community/eza) are needed too -- `.gitconfig` sets `core.pager = delta`, so git diff output will fail to render without it, and `.zshrc` aliases `cat` to `bat` and `ls` to `eza` for syntax-highlighted file output and git-aware directory listings, respectively. Install all four via your system's package manager (e.g. `brew install git-delta lazygit bat eza`); the install script doesn't install packages, only plugin managers/plugins.
+`.gitconfig` sets `core.pager = delta`, so git diff output fails to render without git-delta. `.zshrc` aliases `cat` to `bat` and `ls`/`l`/`ll`/`la`/`lsa` to `eza`, so those break without their respective tools. ripgrep and fd (`rg`, `fd`) are just recommended -- no tracked config depends on them.
 
-[ripgrep](https://github.com/BurntSushi/ripgrep) and [fd](https://github.com/sharkdp/fd) are also used (as `rg` and `fd`) for faster search and find -- unlike the above, no tracked config depends on them, they're just recommended (`brew install ripgrep fd`).
+For the agnoster theme in oh-my-zsh to work properly, patched fonts are needed. `install.sh` clones and installs [Powerline-fonts](https://github.com/powerline/fonts) automatically.
 
-[Ghostty](https://ghostty.org) is used as the terminal emulator. `ghostty-config` is symlinked to `~/.config/ghostty/config` and sets the Solarized Dark theme to match vim/tmux/delta; Ghostty itself isn't installed by install.sh.
+`ghostty-config` is symlinked to `~/.config/ghostty/config` and sets the Solarized Dark theme to match vim/tmux/delta.
 
 ## Installing
 _NOTE:_ Backup any dotfiles you already have before installing. The symlinking will remove any files you might already have with the same names.

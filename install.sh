@@ -36,6 +36,16 @@ link_dotfile() {
     ln -sfv "$src" "$dest"
 }
 
+# Install Homebrew-managed packages listed in Brewfile, if Homebrew itself
+# is available. --no-upgrade keeps this idempotent -- it only installs
+# what's missing, matching every other step below, rather than upgrading
+# already-installed packages on every re-run.
+if command -v brew >/dev/null 2>&1; then
+    brew bundle install --no-upgrade --file="$DOTFILES_DIRECTORY/Brewfile"
+else
+    echo "Homebrew not found -- skipping Brewfile install. See README for the manual package list." >&2
+fi
+
 # Install oh-my-zsh, if not installed already
 if [ ! -d "$OH_MY_ZSH_LOCATION" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -131,7 +141,16 @@ if command -v vim >/dev/null 2>&1; then
     vim +PluginInstall +qall
 fi
 
-# Change shell to zsh if not changed already
-if [ "$SHELL" != "$(command -v zsh)" ]; then
-    chsh -s "$(command -v zsh)"
+# Change shell to zsh if not changed already. chsh requires the target to
+# be listed in /etc/shells -- true automatically for the system zsh, but
+# not for one just brewed above, so check first rather than hard-failing
+# under set -e; fixing /etc/shells needs sudo, too invasive to do silently.
+ZSH_BIN="$(command -v zsh)"
+if [ "$SHELL" != "$ZSH_BIN" ]; then
+    if grep -qxF "$ZSH_BIN" /etc/shells 2>/dev/null; then
+        chsh -s "$ZSH_BIN"
+    else
+        echo "NOTE: $ZSH_BIN isn't listed in /etc/shells, so chsh was skipped." >&2
+        echo "Run: sudo sh -c \"echo $ZSH_BIN >> /etc/shells\" && chsh -s $ZSH_BIN" >&2
+    fi
 fi
