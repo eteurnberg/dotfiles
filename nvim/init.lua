@@ -1,7 +1,12 @@
 -- Neovim configuration by Emil Teurnberg
--- Stage 1 of a staged Vim -> Neovim migration: full functional parity via
--- lazy.nvim, before any plugin swaps (see nvim/lua/plugins/*.lua and the
--- migration plan for what changes in later stages).
+-- Staged Vim -> Neovim migration -- see the migration plan for what
+-- changes in each stage.
+
+-- Must be set before any <leader> keymap is defined -- ours below, and
+-- every plugin's own leader mappings set during require('config.lazy').
+-- .vimrc never set this, so Vim's implicit default was backslash;
+-- switched to space here, the modern convention.
+vim.g.mapleader = ' '
 
 require('config.options')
 require('config.keymaps')
