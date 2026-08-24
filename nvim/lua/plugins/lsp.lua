@@ -17,6 +17,36 @@ return {
     config = function()
       local servers = { 'ts_ls', 'omnisharp', 'jsonls' }
       require('mason-lspconfig').setup({ ensure_installed = servers })
+
+      -- OmniSharp chooses which projects to load by scanning its own
+      -- process cwd, ignoring the root_dir Neovim resolves -- `:h
+      -- vim.lsp.ClientConfig` spells out that cmd_cwd is "Not related to
+      -- root_dir". So opening a .cs file from anywhere other than the
+      -- project directory attaches a server that silently resolves
+      -- nothing: empty hover, no completion, no-op rename. Passing -s
+      -- pins the scan to the detected root. The cmd function form is the
+      -- documented hook that receives the resolved config (hence
+      -- root_dir); everything else (filetypes/root_dir/settings) still
+      -- comes from nvim-lspconfig's own omnisharp config.
+      vim.lsp.config('omnisharp', {
+        cmd = function(dispatchers, config)
+          local cmd = {
+            vim.fn.executable('OmniSharp') == 1 and 'OmniSharp' or 'omnisharp',
+            '-z',
+            '--hostPID',
+            tostring(vim.fn.getpid()),
+            'DotNet:enablePackageRestore=false',
+            '--encoding',
+            'utf-8',
+            '--languageserver',
+          }
+          if config.root_dir then
+            vim.list_extend(cmd, { '-s', config.root_dir })
+          end
+          return vim.lsp.rpc.start(cmd, dispatchers)
+        end,
+      })
+
       vim.lsp.enable(servers)
     end,
   },
