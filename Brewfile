@@ -13,6 +13,13 @@ brew "lazygit"    # lazygit-config.yml
 brew "bat"        # .zshrc aliases cat -> bat
 brew "eza"        # .zshrc aliases ls/l/ll/la/lsa -> eza
 
+# nvim-treesitter's main branch generates parsers with the tree-sitter CLI
+# at install/update time. Note this is a different formula from the
+# `tree-sitter` library (which Neovim already pulls in as a dependency and
+# which ships no binary); upstream also specifically wants the package
+# manager build here, not the npm one.
+brew "tree-sitter-cli"
+
 # Recommended, but no tracked config depends on them
 brew "ripgrep"
 brew "fd"
