@@ -67,9 +67,10 @@ return {
           map('n', 'gr', vim.lsp.buf.references, opts)
           map('n', '<leader>rn', vim.lsp.buf.rename, opts)
           map('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-          map({ 'n', 'x' }, '<leader>f', function()
-            vim.lsp.buf.format({ async = true })
-          end, opts)
+          -- <leader>f intentionally lives in plugins/format.lua, not
+          -- here: conform.nvim routes to this same LSP formatter via
+          -- lsp_format='fallback', and a buffer-local mapping here would
+          -- shadow conform's global one on every LSP-attached buffer.
         end,
       })
 
