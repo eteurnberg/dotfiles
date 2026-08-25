@@ -20,10 +20,9 @@ brew "eza"        # .zshrc aliases ls/l/ll/la/lsa -> eza
 # manager build here, not the npm one.
 brew "tree-sitter-cli"
 
-# Shell linting, wired up in nvim via nvim-lint. ALE nominally had this
-# configured for years but shellcheck was never actually installed, so it
-# had never once run until now.
-brew "shellcheck"
+# Linters, wired up in nvim via nvim-lint
+brew "shellcheck"  # shell
+brew "rumdl"       # markdown
 
 # Recommended, but no tracked config depends on them
 brew "ripgrep"

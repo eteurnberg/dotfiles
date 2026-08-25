@@ -1,7 +1,9 @@
 # My Dotfiles
+
 My configuration files. I use zshell with oh-my-zsh, Neovim and tmux. The goal is for these files to work on both OS X and Ubuntu. These are mainly kept here to be accessible to myself, but you are welcome to use and try them if you like.
 
 ## Prerequisites
+
 [Homebrew](https://brew.sh) needs to be installed already. Given that, running `install.sh` installs everything else automatically from the tracked `Brewfile`: zsh, Neovim, vim, tmux, git, [delta](https://github.com/dandavison/delta), [lazygit](https://github.com/jesseduffield/lazygit), [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [ripgrep](https://github.com/BurntSushi/ripgrep), [fd](https://github.com/sharkdp/fd), [shellcheck](https://www.shellcheck.net), [tree-sitter-cli](https://tree-sitter.github.io), [Ghostty](https://ghostty.org) and the MesloLGS Nerd Font Mono font. Without Homebrew, install these manually via your system's package manager instead -- `install.sh` skips the Brewfile step entirely if `brew` isn't on `PATH`.
 
 `.gitconfig` sets `core.pager = delta`, so git diff output fails to render without git-delta. `.zshrc` aliases `cat` to `bat` and `ls`/`l`/`ll`/`la`/`lsa` to `eza`, so those break without their respective tools. ripgrep and fd (`rg`, `fd`) are useful directly and are also what Neovim's fuzzy finder uses. shellcheck and tree-sitter-cli exist for Neovim's linting and parser generation respectively.
@@ -11,6 +13,7 @@ For the agnoster theme in oh-my-zsh to work properly, patched fonts are needed. 
 `ghostty-config` is symlinked to `~/.config/ghostty/config`, sets the Solarized Dark theme to match vim/tmux/delta, and pins the Nerd Font installed via the `Brewfile` -- a superset of the plain Powerline fonts, so it also covers the separator glyphs tmux's status bar and the zsh prompt already relied on, plus unlocks the file/git icons `eza --icons=auto`, `lazygit-config.yml` (`gui.showIcons`) and the Neovim statusline now use.
 
 ## Neovim
+
 Neovim is the editor here -- `EDITOR` and git's `core.editor` both point at `nvim`. `nvim/` is a Lua config (`install.sh` symlinks the whole directory to `~/.config/nvim`) managed by [lazy.nvim](https://github.com/folke/lazy.nvim), which `install.sh` also bootstraps and syncs headlessly, so a fresh machine needs no manual `:Lazy sync`.
 
 `.vimrc` still exists but is now a deliberately plugin-free fallback: no Vundle, no plugins, nothing to install, for use on a minimal box where `vim` is whatever the system ships. Everything that needed a plugin now lives only in the Neovim config.
@@ -19,13 +22,17 @@ Current look and feel: [solarized.nvim](https://github.com/maxmx03/solarized.nvi
 
 LSP/completion is native: [mason.nvim](https://github.com/mason-org/mason.nvim) + [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) install and enable `ts_ls`/`omnisharp`/`jsonls` (1:1 replacing coc.nvim's `coc-tsserver`/`coc-omnisharp`/`coc-json`), with [blink.cmp](https://github.com/saghen/blink.cmp) for completion. `gd`/`gy`/`gi`/`gr`/`<leader>rn`/`<leader>ca`/`[g`/`]g` all now come from `vim.lsp.buf.*`/`vim.diagnostic.*` rather than coc; `K` still checks for a hover-capable client first and falls back to devdocs.vim's buffer-local mapping otherwise, same logic as before.
 
-Linting is [nvim-lint](https://github.com/mfussenegger/nvim-lint) and formatting ([`<leader>f`](#)) is [conform.nvim](https://github.com/stevearc/conform.nvim), replacing ALE. Only linters that are actually installed run: shellcheck (via the `Brewfile`) for shell, and eslint resolved from a project's own `node_modules/.bin` — never a global install, so a project's pinned version always wins. Anything without a configured formatter falls back to its LSP server's formatting, which is what `<leader>f` did before. Formatting is on demand only; nothing reformats on save.
+Linting is [nvim-lint](https://github.com/mfussenegger/nvim-lint) and formatting (`<leader>f`) is [conform.nvim](https://github.com/stevearc/conform.nvim), replacing ALE. Only linters that are actually installed run: shellcheck for shell and [rumdl](https://github.com/rvben/rumdl) for markdown (both via the `Brewfile`), plus eslint resolved from a project's own `node_modules/.bin` — never a global install, so a project's pinned version always wins.
+
+rumdl also works from the CLI: `rumdl check .` to lint, `rumdl fmt` to auto-fix. `.rumdl.toml` configures the rules. Anything without a configured formatter falls back to its LSP server's formatting, which is what `<leader>f` did before. Formatting is on demand only; nothing reformats on save.
 
 ALE's old linter table listed html/rust/text/markdown/latex too, but none of those binaries were ever installed, so those linters had never actually run — they were dropped rather than ported.
 
 ## Installing
-_NOTE:_ Backup any dotfiles you already have before installing. The symlinking will remove any files you might already have with the same names.
+
+*NOTE:* Backup any dotfiles you already have before installing. The symlinking will remove any files you might already have with the same names.
 The .gitconfig file is setup to use my user name and email, you will want to change this.
+
 1. Clone this repo and `cd` into it.
 2. Run install.sh, you might have to run it as root.
 
@@ -33,7 +40,7 @@ To update, pull the repo and run install.sh again.
 
 `install.sh` is an install-or-reload script: every step is idempotent, so re-running is always safe. It's organised into named steps, and after the first run it's also on `PATH` as `dotfiles` (symlinked into `~/.local/bin`), so it can be run from anywhere:
 
-```
+```text
 dotfiles              # every step
 dotfiles symlinks     # just one step -- skips the slow brew/Neovim steps
 dotfiles --list       # show the steps
@@ -42,6 +49,7 @@ dotfiles --list       # show the steps
 Most edits need no run at all: tracked files are symlinked, so changes are live immediately. Re-run when adding a *new* tracked file, or changing the `Brewfile` or Neovim's plugin set.
 
 ## Reloading config in place
+
 | Where | How | Notes |
 |---|---|---|
 | zsh | `reload` | Replaces the current shell via `exec zsh -l`. Has to be a shell function, not a script -- a child process can't change its parent's environment. |

@@ -1,0 +1,4 @@
+# MD013 (line length) off: prose here is one line per paragraph, so
+# hard-wrapping at 80 would be churn with no benefit.
+[global]
+disable = ["MD013"]

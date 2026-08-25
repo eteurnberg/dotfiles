@@ -21,7 +21,12 @@ return {
       sh = { 'shellcheck' },
       bash = { 'shellcheck' },
       javascript = { 'eslint' },
+      markdown = { 'rumdl' },
     }
+
+    -- nvim-lint ships rumdl as stream = "stderr", but rumdl writes its JSON
+    -- to stdout, so diagnostics never appear without this.
+    lint.linters.rumdl.stream = 'stdout'
 
     -- Prefer a project-local eslint over a global one; without this
     -- nvim-lint just runs whatever bare `eslint` resolves to, which here
