@@ -1,57 +1,122 @@
 # My Dotfiles
 
-My configuration files. I use zshell with oh-my-zsh, Neovim and tmux. The goal is for these files to work on both OS X and Ubuntu. These are mainly kept here to be accessible to myself, but you are welcome to use and try them if you like.
+Configuration for zsh (oh-my-zsh), Neovim, tmux, Ghostty and git, targeting
+both macOS and Ubuntu. Kept public mainly for my own convenience, but you're
+welcome to use them.
 
-## Prerequisites
-
-[Homebrew](https://brew.sh) needs to be installed already. Given that, running `install.sh` installs everything else automatically from the tracked `Brewfile`: zsh, Neovim, vim, tmux, git, [delta](https://github.com/dandavison/delta), [lazygit](https://github.com/jesseduffield/lazygit), [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [ripgrep](https://github.com/BurntSushi/ripgrep), [fd](https://github.com/sharkdp/fd), [shellcheck](https://www.shellcheck.net), [tree-sitter-cli](https://tree-sitter.github.io), [Ghostty](https://ghostty.org) and the MesloLGS Nerd Font Mono font. Without Homebrew, install these manually via your system's package manager instead -- `install.sh` skips the Brewfile step entirely if `brew` isn't on `PATH`.
-
-`.gitconfig` sets `core.pager = delta`, so git diff output fails to render without git-delta. `.zshrc` aliases `cat` to `bat` and `ls`/`l`/`ll`/`la`/`lsa` to `eza`, so those break without their respective tools. ripgrep and fd (`rg`, `fd`) are useful directly and are also what Neovim's fuzzy finder uses. shellcheck and tree-sitter-cli exist for Neovim's linting and parser generation respectively.
-
-For the agnoster theme in oh-my-zsh to work properly, patched fonts are needed. `install.sh` clones and installs [Powerline-fonts](https://github.com/powerline/fonts) automatically.
-
-`ghostty-config` is symlinked to `~/.config/ghostty/config`, sets the Solarized Dark theme to match vim/tmux/delta, and pins the Nerd Font installed via the `Brewfile` -- a superset of the plain Powerline fonts, so it also covers the separator glyphs tmux's status bar and the zsh prompt already relied on, plus unlocks the file/git icons `eza --icons=auto`, `lazygit-config.yml` (`gui.showIcons`) and the Neovim statusline now use.
-
-## Neovim
-
-Neovim is the editor here -- `EDITOR` and git's `core.editor` both point at `nvim`. `nvim/` is a Lua config (`install.sh` symlinks the whole directory to `~/.config/nvim`) managed by [lazy.nvim](https://github.com/folke/lazy.nvim), which `install.sh` also bootstraps and syncs headlessly, so a fresh machine needs no manual `:Lazy sync`.
-
-`.vimrc` still exists but is now a deliberately plugin-free fallback: no Vundle, no plugins, nothing to install, for use on a minimal box where `vim` is whatever the system ships. Everything that needed a plugin now lives only in the Neovim config.
-
-Current look and feel: [solarized.nvim](https://github.com/maxmx03/solarized.nvim) (Solarized Dark, same as before) with [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) for the statusline and [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) for git change signs -- replacing vim-solarized8/vim-airline/vim-gitgutter respectively, with the same visual intent. [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) provides syntax highlighting; [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) (fuzzy find, `<leader>ff`/`<leader>fg`/`<leader>fb`/`<leader>fh`) and [which-key.nvim](https://github.com/folke/which-key.nvim) (keybind discovery popup) are new capability with no new external dependencies (telescope's `ripgrep`/`fd` are already in the `Brewfile`). The leader key is space, not Vim's default backslash.
-
-LSP/completion is native: [mason.nvim](https://github.com/mason-org/mason.nvim) + [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) install and enable `ts_ls`/`omnisharp`/`jsonls` (1:1 replacing coc.nvim's `coc-tsserver`/`coc-omnisharp`/`coc-json`), with [blink.cmp](https://github.com/saghen/blink.cmp) for completion. `gd`/`gy`/`gi`/`gr`/`<leader>rn`/`<leader>ca`/`[g`/`]g` all now come from `vim.lsp.buf.*`/`vim.diagnostic.*` rather than coc; `K` still checks for a hover-capable client first and falls back to devdocs.vim's buffer-local mapping otherwise, same logic as before.
-
-Linting is [nvim-lint](https://github.com/mfussenegger/nvim-lint) and formatting (`<leader>f`) is [conform.nvim](https://github.com/stevearc/conform.nvim), replacing ALE. Only linters that are actually installed run: shellcheck for shell and [rumdl](https://github.com/rvben/rumdl) for markdown (both via the `Brewfile`), plus eslint resolved from a project's own `node_modules/.bin` — never a global install, so a project's pinned version always wins.
-
-rumdl also works from the CLI: `rumdl check .` to lint, `rumdl fmt` to auto-fix. `.rumdl.toml` configures the rules. Anything without a configured formatter falls back to its LSP server's formatting, which is what `<leader>f` did before. Formatting is on demand only; nothing reformats on save.
-
-ALE's old linter table listed html/rust/text/markdown/latex too, but none of those binaries were ever installed, so those linters had never actually run — they were dropped rather than ported.
+Tracked files are symlinked into place, so editing one here takes effect
+immediately — no reinstall needed.
 
 ## Installing
 
-*NOTE:* Backup any dotfiles you already have before installing. The symlinking will remove any files you might already have with the same names.
-The .gitconfig file is setup to use my user name and email, you will want to change this.
+Requires [Homebrew](https://brew.sh); everything else comes from the tracked
+`Brewfile`. Without Homebrew that step is skipped and the packages have to be
+installed by hand.
 
 1. Clone this repo and `cd` into it.
-2. Run install.sh, you might have to run it as root.
+2. Run `./install.sh`.
 
-To update, pull the repo and run install.sh again.
+Backup anything you already have at the same paths first — existing real files
+are moved to `~/.dotfiles_backup/<timestamp>`, but symlinks are overwritten.
+`.gitconfig` carries my name and email, so change those.
 
-`install.sh` is an install-or-reload script: every step is idempotent, so re-running is always safe. It's organised into named steps, and after the first run it's also on `PATH` as `dotfiles` (symlinked into `~/.local/bin`), so it can be run from anywhere:
+## The `dotfiles` command
 
-```text
-dotfiles              # every step
-dotfiles symlinks     # just one step -- skips the slow brew/Neovim steps
-dotfiles --list       # show the steps
+`install.sh` is an install-or-reload script: every step is idempotent, so
+re-running is always safe. After the first run it's on `PATH` as `dotfiles`.
+
+```sh
+dotfiles              # run every step
+dotfiles symlinks     # run one step, skipping the slow brew/Neovim ones
+dotfiles --list       # show all steps
 ```
 
-Most edits need no run at all: tracked files are symlinked, so changes are live immediately. Re-run when adding a *new* tracked file, or changing the `Brewfile` or Neovim's plugin set.
+Re-run it after adding a new tracked file, or changing the `Brewfile` or
+Neovim's plugin list.
 
 ## Reloading config in place
 
-| Where | How | Notes |
-|---|---|---|
-| zsh | `reload` | Replaces the current shell via `exec zsh -l`. Has to be a shell function, not a script -- a child process can't change its parent's environment. |
-| Neovim | `<leader>sv` | Re-applies options/keymaps/autocmds. Plugin spec changes still need a restart. |
-| tmux | `prefix + r` | Prefix is `C-q`. Re-sources `~/.tmux.conf`. |
+| Where | How |
+|---|---|
+| zsh | `reload` |
+| Neovim | `<leader>sv` — options/keymaps/autocmds only; plugin changes need a restart |
+| tmux | `prefix + r` |
+
+## What's installed
+
+Packages come from `Brewfile`: zsh, Neovim, tmux, git, plus
+[delta](https://github.com/dandavison/delta) (git pager),
+[lazygit](https://github.com/jesseduffield/lazygit),
+[bat](https://github.com/sharkdp/bat),
+[eza](https://github.com/eza-community/eza),
+[ripgrep](https://github.com/BurntSushi/ripgrep),
+[fd](https://github.com/sharkdp/fd),
+[shellcheck](https://www.shellcheck.net),
+[rumdl](https://github.com/rvben/rumdl),
+[tree-sitter-cli](https://tree-sitter.github.io),
+[Ghostty](https://ghostty.org) and the MesloLGS Nerd Font Mono font. A Nerd
+Font is required for the icons and separators used by the shell prompt, tmux
+status line, Neovim and lazygit.
+
+`vim` is also installed, with a plugin-free `.vimrc` as a fallback for minimal
+machines. Neovim is the real editor and is what `EDITOR` and git's
+`core.editor` point at.
+
+## Shell
+
+| Alias | Runs |
+|---|---|
+| `cat` | `bat` — syntax-highlighted |
+| `ls` `l` `ll` `la` | `eza` with icons, in varying detail |
+| `cdot` | cd to this repo |
+| `brewup` | update and upgrade Homebrew packages |
+| `cl` | `clear` |
+| `cb` `cr` `cnbin` `cnlib` | cargo build / run / new --bin / new |
+| `dockerka` | stop all running containers |
+
+Machine-specific values (work email, tokens) go in `~/.zshrc.local`, which is
+untracked — see `.zshrc.local.example`.
+
+## Neovim
+
+Lua config in `nvim/`, symlinked to `~/.config/nvim` and managed by
+[lazy.nvim](https://github.com/folke/lazy.nvim). Leader is `Space`.
+
+| Key | Does |
+|---|---|
+| `gd` `gy` `gi` `gr` | LSP: definition, type definition, implementation, references |
+| `K` | hover docs (falls back to devdocs for c/rust/haskell) |
+| `<leader>rn` `<leader>ca` | rename symbol, code action |
+| `<leader>f` | format buffer or selection |
+| `[g` `]g` | previous/next diagnostic |
+| `<leader>ff` `<leader>fg` `<leader>fb` `<leader>fh` | find files, live grep, buffers, help |
+| `<leader>gs` `<leader>gd` `<leader>gb` `<leader>gl` | git status, diff, blame, log |
+| `<leader>gh` | open current file/lines on GitHub |
+| `jj` | escape to normal mode |
+| `<C-x>` `<C-a>` | next/previous tab |
+| `<F5>` | strip trailing whitespace |
+
+LSP servers (`ts_ls`, `omnisharp`, `jsonls`) install themselves via
+[mason.nvim](https://github.com/mason-org/mason.nvim) on first use.
+Linting runs automatically for shell and markdown; formatting is on demand
+only, never on save.
+
+## tmux
+
+Prefix is `C-q`. Plugins are managed by tpm; press `prefix + I` to install
+them on a new machine.
+
+| Key | Does |
+|---|---|
+| `prefix + \|` / `prefix + -` | split vertically / horizontally |
+| `prefix + h/j/k/l` | move between panes |
+| `prefix + H/J/K/L` | resize pane |
+| `prefix + C-h` / `prefix + C-l` | previous/next window |
+| `prefix + Escape` | copy mode (`v` select, `y` copy) |
+
+Sessions are saved and restored automatically across reboots.
+
+## Markdown
+
+`rumdl check .` lints, `rumdl fmt` auto-fixes. Rules are configured in
+`.rumdl.toml`.
