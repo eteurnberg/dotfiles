@@ -34,8 +34,9 @@ plugins=(git npm tmux colored-man-pages docker docker-compose ng web-search kube
 
 # User configuration
 
-# The absolute path of where this script is run
-export SCRIPT_PATH=${(%):-%N}
+# The dotfiles repo itself. :A resolves ~/.zshrc through its symlink to the
+# repo checkout, then :h takes the containing directory.
+export DOTFILES_REPO=${${(%):-%N}:A:h}
 
 source $ZSH/oh-my-zsh.sh
 
@@ -82,7 +83,7 @@ alias pwdtree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'" # Prints 
 alias brewup="brew update && brew upgrade"
 
 # Project specific aliases
-alias dotfiles="cd $SCRIPT_PATH" # Goes to the project folder for all dotfiles
+alias cdot="cd $DOTFILES_REPO" # Goes to the project folder for all dotfiles
 
 # TOOL SPECIFIC
 # Rust
