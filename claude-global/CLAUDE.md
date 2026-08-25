@@ -24,6 +24,8 @@
 ## Documentation
 
 - Update documentation when behavior changes.
+- Code comments should be concise.
+- Code comments are added to describe non-obvious behaviour or decisions.
 
 ## Security
 
