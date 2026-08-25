@@ -1,16 +1,50 @@
 #!/usr/bin/env bash
+#
+# Install-or-reload script for these dotfiles.
+#
+# Every step is idempotent -- each one either creates what's missing or
+# refreshes what's already there -- so this is as much a "reload" as an
+# "install" and is safe to re-run any time. Once it has run once it is also
+# available as the `dotfiles` command from anywhere (see step_symlinks).
+#
+# Note that editing an already-tracked file needs no run at all: the tracked
+# files are symlinked into place, so edits are live immediately. Re-running
+# matters when adding a *new* tracked file, changing the Brewfile, or
+# changing Neovim's plugin set.
+#
+# Usage:
+#   ./install.sh                 run every step, in order
+#   ./install.sh symlinks        run only the named step(s)
+#   ./install.sh symlinks neovim run several, in the order given
+#   ./install.sh --list          list the steps
+#   ./install.sh --help          this message
+#
+# Targeted like that, ordering is your responsibility -- see STEPS below for
+# the dependencies between them. A plain full run is always correct.
+#
+# Written for bash 3.2, which is what macOS still ships (so: no associative
+# arrays, no `readlink -f`).
 
 set -euo pipefail
 
+# Resolve this script's own location *through* symlinks. When invoked as
+# ~/.local/bin/dotfiles, BASH_SOURCE[0] is that symlink, so a plain dirname
+# would yield ~/.local/bin rather than the repo and every symlink target
+# below would be wrong. Plain readlink (no -f) because BSD and GNU differ.
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+    SOURCE_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$SOURCE_DIR/$SOURCE"
+done
+DOTFILES_DIRECTORY="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 export DOTFILES_DIRECTORY
 
 # Variables, make any wanted changes here
 TPM_LOCATION=~/.tmux/plugins/tpm
 OH_MY_ZSH_LOCATION=~/.oh-my-zsh
 OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
-
-# Get absolute path to the directory the script is located in
-DOTFILES_DIRECTORY="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
 
 FONTS_DIR="$DOTFILES_DIRECTORY/fonts"
 
@@ -19,6 +53,27 @@ dotfiles=(".vimrc" ".tmux.conf" ".tmuxline_snapshot.conf" ".zshenv" ".zprofile" 
 
 # Where pre-existing real files get moved before being replaced by a symlink
 BACKUP_DIR="${HOME}/.dotfiles_backup/$(date +%Y%m%d%H%M%S)"
+
+# The steps, in the order a full run executes them. Dependencies:
+#   packages -> neovim   (needs nvim installed)
+#   symlinks -> neovim   (Lazy sync reads ~/.config/nvim)
+#   omz      -> zsh      (plugins live under ~/.oh-my-zsh/custom)
+STEPS=(packages omz zsh tmux fonts symlinks git neovim shell)
+
+step_description() {
+    case "$1" in
+        packages) echo "Install Homebrew packages listed in Brewfile" ;;
+        omz)      echo "Install oh-my-zsh" ;;
+        zsh)      echo "Install the powerlevel9k theme and third-party zsh plugins" ;;
+        tmux)     echo "Install Tmux Plugin Manager (tpm)" ;;
+        fonts)    echo "Install Powerline fonts" ;;
+        symlinks) echo "Symlink tracked config into place, plus the 'dotfiles' command" ;;
+        git)      echo "Point git at the global gitignore" ;;
+        neovim)   echo "Install/sync lazy.nvim-managed Neovim plugins" ;;
+        shell)    echo "Make zsh the login shell" ;;
+        *)        echo "(no description)" ;;
+    esac
+}
 
 # Symlink $1 to $2, backing up whatever currently lives at $2 first if it's a
 # real file/directory rather than an already-existing symlink
@@ -43,116 +98,206 @@ link_dotfile() {
 # is available. --no-upgrade keeps this idempotent -- it only installs
 # what's missing, matching every other step below, rather than upgrading
 # already-installed packages on every re-run.
-if command -v brew >/dev/null 2>&1; then
-    brew bundle install --no-upgrade --file="$DOTFILES_DIRECTORY/Brewfile"
-else
-    echo "Homebrew not found -- skipping Brewfile install. See README for the manual package list." >&2
-fi
+step_packages() {
+    if command -v brew >/dev/null 2>&1; then
+        brew bundle install --no-upgrade --file="$DOTFILES_DIRECTORY/Brewfile"
+    else
+        echo "Homebrew not found -- skipping Brewfile install. See README for the manual package list." >&2
+    fi
+}
 
 # Install oh-my-zsh, if not installed already
-if [ ! -d "$OH_MY_ZSH_LOCATION" ]; then
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-fi
+step_omz() {
+    if [ ! -d "$OH_MY_ZSH_LOCATION" ]; then
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    fi
+}
+
+# Install oh-my-zsh theme powerlevel9k, plus the third-party plugins
+# referenced in .zshrc's plugins=(), if not already installed. Plugin
+# entries are "install dir name|git url".
+step_zsh() {
+    if [ ! -d "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION" ]; then
+        git clone https://github.com/bhilburn/powerlevel9k.git "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION"
+    fi
+
+    local zsh_plugins entry plugin_dir plugin_url
+    zsh_plugins=(
+        "zsh-autosuggestions|https://github.com/zsh-users/zsh-autosuggestions"
+        "zsh-syntax-highlighting|https://github.com/zsh-users/zsh-syntax-highlighting"
+        "zsh-completions|https://github.com/zsh-users/zsh-completions"
+        "you-should-use|https://github.com/MichaelAquilina/zsh-you-should-use.git"
+    )
+    for entry in "${zsh_plugins[@]}"; do
+        plugin_dir="${entry%%|*}"
+        plugin_url="${entry#*|}"
+        if [ ! -d "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir" ]; then
+            git clone --depth 1 "$plugin_url" "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir"
+        fi
+    done
+}
 
 # Install Tmux Plugin Manager, if not installed already
-if [ ! -d "$TPM_LOCATION" ]; then
-    git clone https://github.com/tmux-plugins/tpm "$TPM_LOCATION"
-fi
-
-# Install oh-my-zsh theme powerlevel9k if not already installed
-if [ ! -d "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION" ]; then
-    git clone https://github.com/bhilburn/powerlevel9k.git "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION"
-fi
-
-# Install third-party oh-my-zsh plugins referenced in .zshrc's plugins=(),
-# if not already installed. Entries are "install dir name|git url".
-ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
-zsh_plugins=(
-    "zsh-autosuggestions|https://github.com/zsh-users/zsh-autosuggestions"
-    "zsh-syntax-highlighting|https://github.com/zsh-users/zsh-syntax-highlighting"
-    "zsh-completions|https://github.com/zsh-users/zsh-completions"
-    "you-should-use|https://github.com/MichaelAquilina/zsh-you-should-use.git"
-)
-for entry in "${zsh_plugins[@]}"; do
-    plugin_dir="${entry%%|*}"
-    plugin_url="${entry#*|}"
-    if [ ! -d "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir" ]; then
-        git clone --depth 1 "$plugin_url" "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir"
+step_tmux() {
+    if [ ! -d "$TPM_LOCATION" ]; then
+        git clone https://github.com/tmux-plugins/tpm "$TPM_LOCATION"
     fi
-done
+}
 
 # Install powerline fonts, if not installed already
-if [ ! -d "$FONTS_DIR" ]; then
-    git clone https://github.com/powerline/fonts "$FONTS_DIR"
-    "$FONTS_DIR/install.sh"
-fi
+step_fonts() {
+    if [ ! -d "$FONTS_DIR" ]; then
+        git clone https://github.com/powerline/fonts "$FONTS_DIR"
+        "$FONTS_DIR/install.sh"
+    fi
+}
 
-for dotfile in "${dotfiles[@]}"; do
-  link_dotfile "$DOTFILES_DIRECTORY/${dotfile}" "${HOME}/${dotfile}"
-done
+step_symlinks() {
+    local dotfile claude_file
 
-# Symlink individual files from claude-global/ (not .claude/ itself, since
-# ~/.claude also holds Claude Code's own runtime data -- history, cache,
-# settings.json, plugins, ...) into ~/.claude/. Only files meant to apply to
-# every project on this machine belong in claude-global/; anything specific
-# to working on this dotfiles repo (e.g. .claude/settings.local.json,
-# .claude/settings.json) stays in .claude/ and is picked up automatically as
-# this project's own settings, without ever being symlinked to $HOME.
-CLAUDE_DIR="$DOTFILES_DIRECTORY/claude-global"
-if [ -d "$CLAUDE_DIR" ]; then
-    mkdir -p "${HOME}/.claude"
-    for claude_file in "$CLAUDE_DIR"/*; do
-        [ -f "$claude_file" ] && link_dotfile "$claude_file" "${HOME}/.claude/$(basename "$claude_file")"
+    for dotfile in "${dotfiles[@]}"; do
+        link_dotfile "$DOTFILES_DIRECTORY/${dotfile}" "${HOME}/${dotfile}"
     done
-fi
 
-# Symlink lazygit's config file specifically, since ~/.config/lazygit could
-# hold other runtime state alongside it
-mkdir -p "${HOME}/.config/lazygit"
-link_dotfile "$DOTFILES_DIRECTORY/lazygit-config.yml" "${HOME}/.config/lazygit/config.yml"
+    # Symlink individual files from claude-global/ (not .claude/ itself, since
+    # ~/.claude also holds Claude Code's own runtime data -- history, cache,
+    # settings.json, plugins, ...) into ~/.claude/. Only files meant to apply to
+    # every project on this machine belong in claude-global/; anything specific
+    # to working on this dotfiles repo (e.g. .claude/settings.local.json,
+    # .claude/settings.json) stays in .claude/ and is picked up automatically as
+    # this project's own settings, without ever being symlinked to $HOME.
+    local claude_dir="$DOTFILES_DIRECTORY/claude-global"
+    if [ -d "$claude_dir" ]; then
+        mkdir -p "${HOME}/.claude"
+        for claude_file in "$claude_dir"/*; do
+            [ -f "$claude_file" ] && link_dotfile "$claude_file" "${HOME}/.claude/$(basename "$claude_file")"
+        done
+    fi
 
-# Symlink Ghostty's config file specifically, since ~/.config/ghostty could
-# hold other runtime state (themes, cache) alongside it
-mkdir -p "${HOME}/.config/ghostty"
-link_dotfile "$DOTFILES_DIRECTORY/ghostty-config" "${HOME}/.config/ghostty/config"
+    # Symlink lazygit's config file specifically, since ~/.config/lazygit could
+    # hold other runtime state alongside it
+    mkdir -p "${HOME}/.config/lazygit"
+    link_dotfile "$DOTFILES_DIRECTORY/lazygit-config.yml" "${HOME}/.config/lazygit/config.yml"
 
-# Symlink the whole nvim/ directory as one unit, unlike the per-file
-# treatment above -- Neovim's XDG layout keeps all plugin/cache/state data
-# under ~/.local/share/nvim and ~/.local/state/nvim, never inside
-# ~/.config/nvim itself, so nothing untracked can ever need to coexist
-# there the way Claude Code's or lazygit's runtime data does.
-mkdir -p "${HOME}/.config"
-link_dotfile "$DOTFILES_DIRECTORY/nvim" "${HOME}/.config/nvim"
+    # Symlink Ghostty's config file specifically, since ~/.config/ghostty could
+    # hold other runtime state (themes, cache) alongside it
+    mkdir -p "${HOME}/.config/ghostty"
+    link_dotfile "$DOTFILES_DIRECTORY/ghostty-config" "${HOME}/.config/ghostty/config"
 
-if [ -d "$BACKUP_DIR" ]; then
-    echo "Backed up pre-existing files to $BACKUP_DIR"
-fi
+    # Symlink the whole nvim/ directory as one unit, unlike the per-file
+    # treatment above -- Neovim's XDG layout keeps all plugin/cache/state data
+    # under ~/.local/share/nvim and ~/.local/state/nvim, never inside
+    # ~/.config/nvim itself, so nothing untracked can ever need to coexist
+    # there the way Claude Code's or lazygit's runtime data does.
+    mkdir -p "${HOME}/.config"
+    link_dotfile "$DOTFILES_DIRECTORY/nvim" "${HOME}/.config/nvim"
+
+    # Make this script runnable from anywhere as `dotfiles`. ~/.local/bin is
+    # already first on PATH via .zshenv, so this needs no PATH change -- and
+    # unlike a shell alias it works from non-interactive shells too.
+    mkdir -p "${HOME}/.local/bin"
+    link_dotfile "$DOTFILES_DIRECTORY/install.sh" "${HOME}/.local/bin/dotfiles"
+
+    if [ -d "$BACKUP_DIR" ]; then
+        echo "Backed up pre-existing files to $BACKUP_DIR"
+    fi
+}
 
 # Config git to use new global gitignore file. Quoted so the shell doesn't
 # expand the tilde before git sees it -- git expands ~/ itself when reading
 # config, so this stays portable across machines/usernames instead of
 # baking in an absolute path. That's exactly what SC2088 warns about, but
 # here it's the intent, so the warning is silenced rather than "fixed".
-# shellcheck disable=SC2088
-git config --global core.excludesfile '~/.gitignore_global'
+step_git() {
+    # shellcheck disable=SC2088
+    git config --global core.excludesfile '~/.gitignore_global'
+}
 
 # Install/sync lazy.nvim-managed Neovim plugins, if nvim is installed. Runs
 # headless so a fresh machine bootstraps fully non-interactively -- no
 # manual :Lazy sync needed on a new box.
-if command -v nvim >/dev/null 2>&1; then
-    nvim --headless "+Lazy! sync" +qa
-fi
+step_neovim() {
+    if command -v nvim >/dev/null 2>&1; then
+        nvim --headless "+Lazy! sync" +qa
+    fi
+}
 
 # Change shell to zsh if not changed already. chsh requires the target to
 # be listed in /etc/shells -- true automatically for the system zsh, but
 # not for one just brewed above, so check first rather than hard-failing
 # under set -e; fixing /etc/shells needs sudo, too invasive to do silently.
-ZSH_BIN="$(command -v zsh)"
-if [ "$SHELL" != "$ZSH_BIN" ]; then
-    if grep -qxF "$ZSH_BIN" /etc/shells 2>/dev/null; then
-        chsh -s "$ZSH_BIN"
-    else
-        echo "NOTE: $ZSH_BIN isn't listed in /etc/shells, so chsh was skipped." >&2
-        echo "Run: sudo sh -c \"echo $ZSH_BIN >> /etc/shells\" && chsh -s $ZSH_BIN" >&2
+step_shell() {
+    local zsh_bin
+    zsh_bin="$(command -v zsh)"
+    if [ "$SHELL" != "$zsh_bin" ]; then
+        if grep -qxF "$zsh_bin" /etc/shells 2>/dev/null; then
+            chsh -s "$zsh_bin"
+        else
+            echo "NOTE: $zsh_bin isn't listed in /etc/shells, so chsh was skipped." >&2
+            echo "Run: sudo sh -c \"echo $zsh_bin >> /etc/shells\" && chsh -s $zsh_bin" >&2
+        fi
     fi
-fi
+}
+
+# Prints the header comment above (lines 3-23) as the usage text, so the
+# two can't drift apart. Keep the range in step if that block moves.
+usage() {
+    sed -n '3,23p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+list_steps() {
+    local step
+    echo "Steps, in the order a full run executes them:"
+    for step in "${STEPS[@]}"; do
+        printf '  %-9s %s\n' "$step" "$(step_description "$step")"
+    done
+}
+
+is_valid_step() {
+    local candidate="$1" step
+    for step in "${STEPS[@]}"; do
+        [ "$step" = "$candidate" ] && return 0
+    done
+    return 1
+}
+
+run_step() {
+    echo "==> $1: $(step_description "$1")"
+    "step_$1"
+}
+
+main() {
+    local requested=()
+    local arg step
+
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help) usage; return 0 ;;
+            -l|--list) list_steps; return 0 ;;
+            -*)
+                echo "Unknown option: $arg" >&2
+                echo "Try --help." >&2
+                return 1
+                ;;
+            *)
+                if ! is_valid_step "$arg"; then
+                    echo "Unknown step: $arg" >&2
+                    echo "Valid steps: ${STEPS[*]}" >&2
+                    return 1
+                fi
+                requested+=("$arg")
+                ;;
+        esac
+    done
+
+    # No steps named: run them all, in STEPS order.
+    if [ ${#requested[@]} -eq 0 ]; then
+        requested=("${STEPS[@]}")
+    fi
+
+    for step in "${requested[@]}"; do
+        run_step "$step"
+    done
+}
+
+main "$@"

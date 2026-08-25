@@ -10,7 +10,7 @@ map('n', '<C-X>', ':tabn<CR>')
 map('n', '<C-A>', ':tabp<CR>')
 map('n', '<C-O>', 'o<Esc>k')
 map('n', '<C-P>', 'O<Esc>j')
-map('n', '<leader>sv', ':source $MYVIMRC<CR>')
+map('n', '<leader>sv', util.reload_config, { desc = 'Reload nvim config' })
 
 map('n', '<F5>', util.strip_trailing_whitespace)
 map('n', 'j', 'gj')

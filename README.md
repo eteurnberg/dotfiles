@@ -30,3 +30,20 @@ The .gitconfig file is setup to use my user name and email, you will want to cha
 2. Run install.sh, you might have to run it as root.
 
 To update, pull the repo and run install.sh again.
+
+`install.sh` is an install-or-reload script: every step is idempotent, so re-running is always safe. It's organised into named steps, and after the first run it's also on `PATH` as `dotfiles` (symlinked into `~/.local/bin`), so it can be run from anywhere:
+
+```
+dotfiles              # every step
+dotfiles symlinks     # just one step -- skips the slow brew/Neovim steps
+dotfiles --list       # show the steps
+```
+
+Most edits need no run at all: tracked files are symlinked, so changes are live immediately. Re-run when adding a *new* tracked file, or changing the `Brewfile` or Neovim's plugin set.
+
+## Reloading config in place
+| Where | How | Notes |
+|---|---|---|
+| zsh | `reload` | Replaces the current shell via `exec zsh -l`. Has to be a shell function, not a script -- a child process can't change its parent's environment. |
+| Neovim | `<leader>sv` | Re-applies options/keymaps/autocmds. Plugin spec changes still need a restart. |
+| tmux | `prefix + r` | Prefix is `C-q`. Re-sources `~/.tmux.conf`. |

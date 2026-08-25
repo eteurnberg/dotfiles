@@ -112,6 +112,13 @@ POWERLEVEL9K_STATUS_VERBOSE=false
 
 POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 
+# Reload this shell in place. Has to be a function, not a script -- a child
+# process can't alter its parent's environment. exec replaces the current
+# shell rather than nesting one; -l re-runs .zshenv/.zprofile/.zshrc.
+reload () {
+  exec zsh -l
+}
+
 # Weather service
 wttr () {
   curl wttr.in/"$1"
