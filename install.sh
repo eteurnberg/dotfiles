@@ -5,8 +5,6 @@ set -euo pipefail
 export DOTFILES_DIRECTORY
 
 # Variables, make any wanted changes here
-VUNDLE_LOCATION=~/.vim/bundle/Vundle.vim
-COC_LOCATION=~/.vim/bundle/coc.nvim
 TPM_LOCATION=~/.tmux/plugins/tpm
 OH_MY_ZSH_LOCATION=~/.oh-my-zsh
 OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
@@ -33,7 +31,12 @@ link_dotfile() {
         mv -v "$dest" "$BACKUP_DIR/"
     fi
 
-    ln -sfv "$src" "$dest"
+    # -n matters when $dest is already a symlink pointing at a directory
+    # (nvim/ is): without it ln follows the link and drops the new symlink
+    # *inside* the target, so re-running this script would create a
+    # self-referential nvim/nvim. Harmless for file symlinks, required for
+    # directory ones, and supported by both BSD and GNU ln.
+    ln -sfnv "$src" "$dest"
 }
 
 # Install Homebrew-managed packages listed in Brewfile, if Homebrew itself
@@ -49,19 +52,6 @@ fi
 # Install oh-my-zsh, if not installed already
 if [ ! -d "$OH_MY_ZSH_LOCATION" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-fi
-
-# Install Vundle for vim, if not installed already
-if [ ! -d "$VUNDLE_LOCATION" ]; then
-    git clone https://github.com/VundleVim/Vundle.vim.git "$VUNDLE_LOCATION"
-fi
-
-# Install coc.nvim, if not installed already. Cloned directly (rather than
-# left to Vundle's PluginInstall) pinned to the "release" branch, which
-# ships pre-built JS -- the default branch is TypeScript source that needs
-# a yarn build step. Vundle has no way to pin a branch in a Plugin line.
-if [ ! -d "$COC_LOCATION" ]; then
-    git clone --branch release --single-branch https://github.com/neoclide/coc.nvim.git "$COC_LOCATION"
 fi
 
 # Install Tmux Plugin Manager, if not installed already
@@ -141,17 +131,14 @@ fi
 # Config git to use new global gitignore file. Quoted so the shell doesn't
 # expand the tilde before git sees it -- git expands ~/ itself when reading
 # config, so this stays portable across machines/usernames instead of
-# baking in an absolute path.
+# baking in an absolute path. That's exactly what SC2088 warns about, but
+# here it's the intent, so the warning is silenced rather than "fixed".
+# shellcheck disable=SC2088
 git config --global core.excludesfile '~/.gitignore_global'
 
-# Install Vundle plugins, if vim is installed
-if command -v vim >/dev/null 2>&1; then
-    vim +PluginInstall +qall
-fi
-
 # Install/sync lazy.nvim-managed Neovim plugins, if nvim is installed. Runs
-# headless so a fresh machine bootstraps fully non-interactively, same role
-# the vim +PluginInstall line above plays for Vundle.
+# headless so a fresh machine bootstraps fully non-interactively -- no
+# manual :Lazy sync needed on a new box.
 if command -v nvim >/dev/null 2>&1; then
     nvim --headless "+Lazy! sync" +qa
 fi

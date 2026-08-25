@@ -3,9 +3,9 @@
 # kept here so a Homebrew-managed version is what ends up on PATH)
 brew "git"
 brew "zsh"
-brew "vim"    # kept as a fallback through the Neovim migration (see nvim/)
+brew "vim"    # fallback only -- .vimrc is now plugin-free, see nvim/ for the real config
 brew "tmux"
-brew "neovim" # nvim/ -- migrating from vim/Vundle in stages, see the plan
+brew "neovim" # the primary editor; config lives in nvim/
 
 # CLI tools this repo's tracked config depends on
 brew "git-delta"  # .gitconfig sets core.pager = delta

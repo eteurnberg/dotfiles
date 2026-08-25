@@ -31,4 +31,4 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 fi
 
 export PATH
-export EDITOR='vim'
+export EDITOR='nvim'

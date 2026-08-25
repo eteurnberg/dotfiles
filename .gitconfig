@@ -3,7 +3,7 @@
 	email = e.teurnberg@gmail.com
 [core]
 	excludesfile = ~/.gitignore_global
-	editor = vim
+	editor = nvim
 	pager = delta
 [push]
 	default = simple
