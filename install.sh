@@ -41,7 +41,7 @@ DOTFILES_DIRECTORY="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 export DOTFILES_DIRECTORY
 
 # Variables, make any wanted changes here
-TPM_LOCATION=~/.tmux/plugins/tpm
+TPM_LOCATION=~/.config/tmux/plugins/tpm
 OH_MY_ZSH_LOCATION=~/.oh-my-zsh
 OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
 ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
@@ -49,23 +49,26 @@ ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
 FONTS_DIR="$DOTFILES_DIRECTORY/fonts"
 
 # List of dotfiles being kept track of
-dotfiles=(".vimrc" ".tmux.conf" ".tmuxline_snapshot.conf" ".zshenv" ".zprofile" ".zshrc" ".gitconfig" ".gitignore_global")
+dotfiles=(".vimrc" ".zshenv" ".zprofile" ".zshrc" ".gitconfig" ".gitignore_global")
 
 # Where pre-existing real files get moved before being replaced by a symlink
 BACKUP_DIR="${HOME}/.dotfiles_backup/$(date +%Y%m%d%H%M%S)"
 
 # The steps, in the order a full run executes them. Dependencies:
 #   packages -> neovim   (needs nvim installed)
+#   packages -> tmux     (tpm's plugin install needs the tmux binary)
 #   symlinks -> neovim   (Lazy sync reads ~/.config/nvim)
+#   symlinks -> tmux     (tpm reads the plugin list from ~/.config/tmux/tmux.conf,
+#                         and picks its plugin directory by that file's presence)
 #   omz      -> zsh      (plugins live under ~/.oh-my-zsh/custom)
-STEPS=(packages omz zsh tmux fonts symlinks git neovim shell)
+STEPS=(packages omz zsh fonts symlinks tmux git neovim shell)
 
 step_description() {
     case "$1" in
         packages) echo "Install Homebrew packages listed in Brewfile" ;;
         omz)      echo "Install oh-my-zsh" ;;
         zsh)      echo "Install the powerlevel9k theme and third-party zsh plugins" ;;
-        tmux)     echo "Install Tmux Plugin Manager (tpm)" ;;
+        tmux)     echo "Install Tmux Plugin Manager (tpm) and the plugins tmux.conf declares" ;;
         fonts)    echo "Install Powerline fonts" ;;
         symlinks) echo "Symlink tracked config into place, plus the 'dotfiles' command" ;;
         git)      echo "Point git at the global gitignore" ;;
@@ -137,10 +140,22 @@ step_zsh() {
     done
 }
 
-# Install Tmux Plugin Manager, if not installed already
+# Install Tmux Plugin Manager and the plugins tmux.conf declares, if not
+# installed already. Runs after symlinks: tpm decides where to keep plugins by
+# looking for ~/.config/tmux/tmux.conf, and reads the plugin list out of it, so
+# the symlink has to exist first or this installs nothing into the wrong place.
 step_tmux() {
     if [ ! -d "$TPM_LOCATION" ]; then
         git clone https://github.com/tmux-plugins/tpm "$TPM_LOCATION"
+    fi
+
+    # install_plugins is itself idempotent -- it skips plugins already checked
+    # out -- but it needs a tmux server to read the @plugin options, so it can
+    # only run once tmux itself is installed.
+    if command -v tmux >/dev/null 2>&1; then
+        "$TPM_LOCATION/bin/install_plugins"
+    else
+        echo "tmux not found -- skipping plugin install. Run '$TPM_LOCATION/bin/install_plugins' once tmux is available." >&2
     fi
 }
 
@@ -153,7 +168,7 @@ step_fonts() {
 }
 
 step_symlinks() {
-    local dotfile claude_file
+    local dotfile claude_file stale
 
     for dotfile in "${dotfiles[@]}"; do
         link_dotfile "$DOTFILES_DIRECTORY/${dotfile}" "${HOME}/${dotfile}"
@@ -184,6 +199,23 @@ step_symlinks() {
     mkdir -p "${HOME}/.config/ghostty"
     link_dotfile "$DOTFILES_DIRECTORY/ghostty-config" "${HOME}/.config/ghostty/config"
 
+    # Same per-file treatment for tmux: ~/.config/tmux also holds tpm's plugin
+    # checkouts, which must stay untracked.
+    #
+    # Clear the two ~/.tmux* entries left behind by the older layout first.
+    # tmux searches ~/.tmux.conf *before* ~/.config/tmux/tmux.conf, so a stale
+    # one keeps winning and the move would silently have no effect.
+    for stale in "${HOME}/.tmux.conf" "${HOME}/.tmuxline_snapshot.conf"; do
+        if [ -L "$stale" ]; then
+            rm -v "$stale"
+        elif [ -e "$stale" ]; then
+            mkdir -p "$BACKUP_DIR"
+            mv -v "$stale" "$BACKUP_DIR/"
+        fi
+    done
+    mkdir -p "${HOME}/.config/tmux"
+    link_dotfile "$DOTFILES_DIRECTORY/tmux.conf" "${HOME}/.config/tmux/tmux.conf"
+
     # Symlink the whole nvim/ directory as one unit, unlike the per-file
     # treatment above -- Neovim's XDG layout keeps all plugin/cache/state data
     # under ~/.local/share/nvim and ~/.local/state/nvim, never inside
@@ -206,8 +238,7 @@ step_symlinks() {
 # Config git to use new global gitignore file. Quoted so the shell doesn't
 # expand the tilde before git sees it -- git expands ~/ itself when reading
 # config, so this stays portable across machines/usernames instead of
-# baking in an absolute path. That's exactly what SC2088 warns about, but
-# here it's the intent, so the warning is silenced rather than "fixed".
+# baking in an absolute path
 step_git() {
     # shellcheck disable=SC2088
     git config --global core.excludesfile '~/.gitignore_global'

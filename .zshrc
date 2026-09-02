@@ -4,8 +4,13 @@
 # dotfiles repo. See .zshrc.local.example for the expected shape.
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
 
-# For terminal to support 256 colors
-export TERM="xterm-256color"
+# For terminal to support 256 colors. Skipped inside tmux, which already sets
+# TERM to tmux-256color for its panes -- overwriting that hides the extra
+# capabilities that entry exists to advertise, and lies to programs about
+# whether they are running under tmux.
+if [[ -z $TMUX ]]; then
+  export TERM="xterm-256color"
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh

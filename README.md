@@ -103,18 +103,25 @@ only, never on save.
 
 ## tmux
 
-Prefix is `C-q`. Plugins are managed by tpm; press `prefix + I` to install
-them on a new machine.
+Config lives at `~/.config/tmux/tmux.conf` and needs tmux 3.5 or newer.
+Prefix is `C-q`. Plugins are managed by tpm and installed by `./install.sh`.
 
 | Key | Does |
 |---|---|
-| `prefix + \|` / `prefix + -` | split vertically / horizontally |
+| `prefix + \|` / `prefix + -` | split horizontally / vertically, in the current directory |
+| `prefix + c` | new window, in the current directory |
 | `prefix + h/j/k/l` | move between panes |
 | `prefix + H/J/K/L` | resize pane |
 | `prefix + C-h` / `prefix + C-l` | previous/next window |
-| `prefix + Escape` | copy mode (`v` select, `y` copy) |
+| `prefix + Escape` | copy mode (`v` select, `C-v` rectangle, `y` copy, `Escape` exit) |
+| `prefix + g` | lazygit in a popup |
+| `prefix + ?` | list every binding, with descriptions |
 
-Sessions are saved and restored automatically across reboots.
+Copying in copy mode puts the text on the system clipboard, over SSH too.
+`prefix + C` opens tmux's own settings browser.
+
+Sessions are saved by tmux-resurrect and restored by tmux-continuum, both on
+tmux start and after a reboot.
 
 ## Markdown
 
