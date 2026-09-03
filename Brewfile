@@ -1,6 +1,3 @@
-# Baseline shell/editor/multiplexer/vcs tools (assumed pre-existing before
-# this change; git is even needed to clone this repo in the first place --
-# kept here so a Homebrew-managed version is what ends up on PATH)
 brew "git"
 brew "zsh"
 brew "vim"    # fallback only -- .vimrc is now plugin-free, see nvim/ for the real config
@@ -12,10 +9,7 @@ brew "git-delta"  # .gitconfig sets core.pager = delta
 brew "lazygit"    # lazygit-config.yml
 brew "bat"        # .zshrc aliases cat -> bat
 brew "eza"        # .zshrc aliases ls/l/ll/la/lsa -> eza
-# claude-global/statusline-command.sh parses the hook payload with jq. macOS
-# happens to ship /usr/bin/jq, but that is not a Homebrew formula and Ubuntu
-# has none, so without this the status line degrades silently there.
-brew "jq"
+brew "jq"         # used by claude setup, also general usage
 
 # nvim-treesitter's main branch generates parsers with the tree-sitter CLI
 # at install/update time. Note this is a different formula from the

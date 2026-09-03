@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 # Claude Code Notification hook: raise a desktop notification when Claude wants
 # input. Wired up in settings.json for the idle_prompt|permission_prompt matcher.
-#
-# A script rather than an inline settings.json command so the macOS/Linux split
-# stays readable instead of being escaped into a JSON string -- same reason
-# statusline-command.sh is a script.
 
 TITLE="Claude Code"
 message="Claude is waiting for your input"
