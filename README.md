@@ -54,6 +54,8 @@ Packages come from `Brewfile`: zsh, Neovim, tmux, git, plus
 [shellcheck](https://www.shellcheck.net),
 [rumdl](https://github.com/rvben/rumdl),
 [tree-sitter-cli](https://tree-sitter.github.io),
+[jq](https://jqlang.github.io/jq/),
+[Claude Code](https://claude.com/claude-code),
 [Ghostty](https://ghostty.org) and the MesloLGS Nerd Font Mono font. A Nerd
 Font is required for the icons and separators used by the shell prompt, tmux
 status line, Neovim and lazygit.
@@ -122,6 +124,34 @@ Copying in copy mode puts the text on the system clipboard, over SSH too.
 
 Sessions are saved by tmux-resurrect and restored by tmux-continuum, both on
 tmux start and after a reboot.
+
+## Claude Code
+
+User-level config lives in `claude-global/`, whose contents are symlinked
+individually into `~/.claude/`.
+
+| File | Does |
+|---|---|
+| `CLAUDE.md` | Personal defaults loaded in every project |
+| `settings.json` | Model, effort level, theme, status line and the notification hook |
+| `statusline-command.sh` | Status line: model, directory, git branch, context used |
+| `notify.sh` | Desktop notification when Claude wants input (`osascript` or `notify-send`) |
+
+Both directories and files are linked, so tracking a new surface —
+`rules/`, `agents/`, `commands/`, `skills/`, `output-styles/`, `workflows/` —
+is a matter of adding it to `claude-global/` and running `dotfiles symlinks`.
+
+Nothing else under `~/.claude` is tracked, and deliberately so: session
+transcripts, caches, plugin checkouts and `~/.claude.json` are runtime state,
+and the last of those holds the signed-in account and machine identifiers.
+Project-scoped settings for this repo stay in `.claude/settings.json`;
+`.claude/settings.local.json` is machine-local and excluded by
+`.gitignore_global`.
+
+Because `settings.json` is a symlink, anything changed through `/config` is
+written straight back into the repo. If Claude Code ever replaces the symlink
+with a regular file instead of writing through it, treat the repo copy as the
+source of truth and re-run `dotfiles symlinks`.
 
 ## Markdown
 

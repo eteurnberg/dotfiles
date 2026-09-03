@@ -12,6 +12,10 @@ brew "git-delta"  # .gitconfig sets core.pager = delta
 brew "lazygit"    # lazygit-config.yml
 brew "bat"        # .zshrc aliases cat -> bat
 brew "eza"        # .zshrc aliases ls/l/ll/la/lsa -> eza
+# claude-global/statusline-command.sh parses the hook payload with jq. macOS
+# happens to ship /usr/bin/jq, but that is not a Homebrew formula and Ubuntu
+# has none, so without this the status line degrades silently there.
+brew "jq"
 
 # nvim-treesitter's main branch generates parsers with the tree-sitter CLI
 # at install/update time. Note this is a different formula from the
@@ -30,6 +34,9 @@ brew "fd"
 
 # GUI terminal emulator
 cask "ghostty"    # ghostty-config is symlinked to ~/.config/ghostty/config
+
+# Claude Code; its user-level config is tracked in claude-global/
+cask "claude-code"
 
 # Nerd Font, for icons in eza/lazygit and Powerline-style separators in
 # tmux/vim-airline/the zsh prompt (superset of the plain Powerline fonts

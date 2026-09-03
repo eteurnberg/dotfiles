@@ -168,24 +168,33 @@ step_fonts() {
 }
 
 step_symlinks() {
-    local dotfile claude_file stale
+    local dotfile claude_entry stale
 
     for dotfile in "${dotfiles[@]}"; do
         link_dotfile "$DOTFILES_DIRECTORY/${dotfile}" "${HOME}/${dotfile}"
     done
 
-    # Symlink individual files from claude-global/ (not .claude/ itself, since
-    # ~/.claude also holds Claude Code's own runtime data -- history, cache,
-    # settings.json, plugins, ...) into ~/.claude/. Only files meant to apply to
-    # every project on this machine belong in claude-global/; anything specific
-    # to working on this dotfiles repo (e.g. .claude/settings.local.json,
+    # Symlink individual entries from claude-global/ (not .claude/ itself, since
+    # ~/.claude also holds Claude Code's own runtime data -- history, projects,
+    # sessions, cache, plugins, ...) into ~/.claude/. Only config meant to apply
+    # to every project on this machine belongs in claude-global/; anything
+    # specific to working on this dotfiles repo (e.g. .claude/settings.local.json,
     # .claude/settings.json) stays in .claude/ and is picked up automatically as
     # this project's own settings, without ever being symlinked to $HOME.
+    #
+    # Directories are linked as well as files, so config that Claude Code reads
+    # from a directory (rules/, agents/, commands/, skills/, output-styles/,
+    # workflows/) can be tracked just by adding it here. Note this cuts both
+    # ways: whatever lands in ~/.claude/<name> is written straight into the repo,
+    # so directories Claude Code *accumulates state* in -- agent-memory/ in
+    # particular -- must stay out of claude-global/.
     local claude_dir="$DOTFILES_DIRECTORY/claude-global"
     if [ -d "$claude_dir" ]; then
         mkdir -p "${HOME}/.claude"
-        for claude_file in "$claude_dir"/*; do
-            [ -f "$claude_file" ] && link_dotfile "$claude_file" "${HOME}/.claude/$(basename "$claude_file")"
+        for claude_entry in "$claude_dir"/*; do
+            # Guards the unmatched glob, which stays literal when the dir is empty
+            [ -e "$claude_entry" ] || continue
+            link_dotfile "$claude_entry" "${HOME}/.claude/$(basename "$claude_entry")"
         done
     fi
 

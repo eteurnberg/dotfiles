@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "idle_prompt|permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ~/.claude/notify.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "effortLevel": "xhigh",
+  "theme": "auto",
+  "model": "opus[1m]"
+}
