@@ -25,7 +25,8 @@
 
 - Update documentation when behavior changes.
 - Code comments should be concise.
-- Code comments are added to describe non-obvious behaviour or decisions.
+- Code comments are added to describe non-obvious behaviour or decisions in the most concise way possible.
+- If it seems like a block needs a comment, do a pass to see if it's possible to make the implemnentation clearer, removing the need for the comment.
 
 ## Security
 
