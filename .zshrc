@@ -45,6 +45,11 @@ export DOTFILES_REPO=${${(%):-%N}:A:h}
 
 source $ZSH/oh-my-zsh.sh
 
+# Use the SDK's generated completion (written by `dotfiles completions`) rather
+# than the oh-my-zsh dotnet plugin's. Has to come after oh-my-zsh, which
+# registers the plugin's version after compinit. False until that step has run.
+(( $+functions[_dotnet] )) && compdef _dotnet dotnet
+
 # Loading nvm (node version manager)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

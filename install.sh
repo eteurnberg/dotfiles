@@ -45,6 +45,7 @@ TPM_LOCATION=~/.config/tmux/plugins/tpm
 OH_MY_ZSH_LOCATION=~/.oh-my-zsh
 OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
 ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
+ZSH_CUSTOM_COMPLETIONS_DIR="$OH_MY_ZSH_LOCATION/custom/completions"
 
 FONTS_DIR="$DOTFILES_DIRECTORY/fonts"
 
@@ -61,20 +62,22 @@ BACKUP_DIR="${HOME}/.dotfiles_backup/$(date +%Y%m%d%H%M%S)"
 #   symlinks -> tmux     (tpm reads the plugin list from ~/.config/tmux/tmux.conf,
 #                         and picks its plugin directory by that file's presence)
 #   omz      -> zsh      (plugins live under ~/.oh-my-zsh/custom)
-STEPS=(packages omz zsh fonts symlinks tmux git neovim shell)
+#   omz      -> completions (they land under ~/.oh-my-zsh/custom)
+STEPS=(packages omz zsh completions fonts symlinks tmux git neovim shell)
 
 step_description() {
     case "$1" in
-        packages) echo "Install Homebrew packages listed in Brewfile" ;;
-        omz)      echo "Install oh-my-zsh" ;;
-        zsh)      echo "Install the powerlevel9k theme and third-party zsh plugins" ;;
-        tmux)     echo "Install Tmux Plugin Manager (tpm) and the plugins tmux.conf declares" ;;
-        fonts)    echo "Install Powerline fonts" ;;
-        symlinks) echo "Symlink tracked config into place, plus the 'dotfiles' command" ;;
-        git)      echo "Point git at the global gitignore" ;;
-        neovim)   echo "Install/sync lazy.nvim-managed Neovim plugins" ;;
-        shell)    echo "Make zsh the login shell" ;;
-        *)        echo "(no description)" ;;
+        packages)    echo "Install Homebrew packages listed in Brewfile" ;;
+        omz)         echo "Install oh-my-zsh" ;;
+        zsh)         echo "Install the powerlevel9k theme and third-party zsh plugins" ;;
+        completions) echo "Generate zsh completions for tools that emit their own" ;;
+        tmux)        echo "Install Tmux Plugin Manager (tpm) and the plugins tmux.conf declares" ;;
+        fonts)       echo "Install Powerline fonts" ;;
+        symlinks)    echo "Symlink tracked config into place, plus the 'dotfiles' command" ;;
+        git)         echo "Point git at the global gitignore" ;;
+        neovim)      echo "Install/sync lazy.nvim-managed Neovim plugins" ;;
+        shell)       echo "Make zsh the login shell" ;;
+        *)           echo "(no description)" ;;
     esac
 }
 
@@ -138,6 +141,38 @@ step_zsh() {
             git clone --depth 1 "$plugin_url" "$ZSH_CUSTOM_PLUGINS_DIR/$plugin_dir"
         fi
     done
+}
+
+# Generate completions for tools that emit their own but ship no file. Not
+# tracked in the repo: the output is large and pinned to the local tool version.
+step_completions() {
+    mkdir -p "$ZSH_CUSTOM_COMPLETIONS_DIR"
+
+    local refresh_cache=0
+
+    # Needs the .NET 10 SDK; on failure the oh-my-zsh plugin's completion stays.
+    # Temp file so a failed run can't truncate a working _dotnet, unprefixed so
+    # compinit can't load it mid-run. The sed drops MSBuild-style specs (/v=,
+    # /nologo), which _arguments rejects -- taking the whole spec list with them.
+    if command -v dotnet >/dev/null 2>&1; then
+        if dotnet completions script zsh 2>/dev/null \
+            | sed -E "/^[[:space:]]*'\\/[A-Za-z?]/d" > "$ZSH_CUSTOM_COMPLETIONS_DIR/.dotnet.tmp"; then
+            mv "$ZSH_CUSTOM_COMPLETIONS_DIR/.dotnet.tmp" "$ZSH_CUSTOM_COMPLETIONS_DIR/_dotnet"
+            refresh_cache=1
+        else
+            rm -f "$ZSH_CUSTOM_COMPLETIONS_DIR/.dotnet.tmp"
+            echo "'dotnet completions' failed (it needs the .NET 10 SDK or newer) -- keeping the oh-my-zsh plugin's completion." >&2
+        fi
+    else
+        echo "dotnet not found -- skipping its completion." >&2
+    fi
+
+    # oh-my-zsh only rebuilds the dump when $fpath or its own git revision
+    # changes, so a new file in an already-listed dir needs this to be noticed.
+    if [ "$refresh_cache" -eq 1 ]; then
+        rm -f "${ZDOTDIR:-$HOME}"/.zcompdump*
+        echo "Cleared the zsh completion cache -- run 'reload' or open a new shell to pick the new completions up."
+    fi
 }
 
 # Install Tmux Plugin Manager and the plugins tmux.conf declares, if not
@@ -289,7 +324,7 @@ list_steps() {
     local step
     echo "Steps, in the order a full run executes them:"
     for step in "${STEPS[@]}"; do
-        printf '  %-9s %s\n' "$step" "$(step_description "$step")"
+        printf '  %-11s %s\n' "$step" "$(step_description "$step")"
     done
 }
 

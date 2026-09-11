@@ -76,6 +76,11 @@ machines. Neovim is the real editor and is what `EDITOR` and git's
 | `cb` `cr` `cnbin` `cnlib` | cargo build / run / new --bin / new |
 | `dockerka` | stop all running containers |
 
+`dotfiles completions` generates tab completions into
+`~/.oh-my-zsh/custom/completions` and clears the completion cache, so run
+`reload` afterwards. Currently just `dotnet`, which needs the .NET 10 SDK;
+re-run it after an SDK upgrade to pick up new commands and flags.
+
 Machine-specific values (work email, tokens) go in `~/.zshrc.local`, which is
 untracked — see `.zshrc.local.example`.
 
