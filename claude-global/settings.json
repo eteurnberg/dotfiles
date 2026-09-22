@@ -1,4 +1,5 @@
 {
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -18,5 +19,9 @@
   },
   "effortLevel": "xhigh",
   "theme": "auto",
-  "model": "opus[1m]"
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    }
+  }
 }
