@@ -110,6 +110,22 @@ step_packages() {
     else
         echo "Homebrew not found -- skipping Brewfile install. See README for the manual package list." >&2
     fi
+    register_notifier
+}
+
+# terminal-notifier's bottle is adhoc-signed, so macOS silently denies it
+# notification permission until its bundle is registered and launched once.
+# Without this the Claude Code notification hook installs cleanly, then never fires.
+register_notifier() {
+    local lsregister notifier_app
+    lsregister=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+    [ -x "$lsregister" ] || return 0
+
+    notifier_app="$(brew --prefix terminal-notifier 2>/dev/null)/terminal-notifier.app"
+    [ -d "$notifier_app" ] || return 0
+
+    "$lsregister" -f "$notifier_app" 2>/dev/null
+    open -g "$notifier_app" 2>/dev/null
 }
 
 # Install oh-my-zsh, if not installed already

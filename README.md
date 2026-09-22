@@ -55,6 +55,7 @@ Packages come from `Brewfile`: zsh, Neovim, tmux, git, plus
 [rumdl](https://github.com/rvben/rumdl),
 [tree-sitter-cli](https://tree-sitter.github.io),
 [jq](https://jqlang.github.io/jq/),
+[terminal-notifier](https://github.com/julienXX/terminal-notifier),
 [Claude Code](https://claude.com/claude-code),
 [Ghostty](https://ghostty.org) and the MesloLGS Nerd Font Mono font. A Nerd
 Font is required for the icons and separators used by the shell prompt, tmux
@@ -140,7 +141,24 @@ individually into `~/.claude/`.
 | `CLAUDE.md` | Personal defaults loaded in every project |
 | `settings.json` | Model, effort level, theme, status line and the notification hook |
 | `statusline-command.sh` | Status line: model, directory, git branch, context used |
-| `notify.sh` | Desktop notification when Claude wants input (`osascript` or `notify-send`) |
+| `notify.sh` | Desktop notification when Claude wants input (`terminal-notifier`, or `notify-send` on Linux) |
+
+Notifications are built from the hook payload and the session transcript, so
+each one names the session, the repo and branch it belongs to, and what is
+actually being asked — the pending command for a permission prompt, Claude's
+last message when a session goes idle. They are grouped by session id, so a
+session replaces its own previous notification instead of stacking, and inside
+tmux clicking one focuses the pane it came from.
+
+Because the body can quote repo content, set *System Settings → Notifications →
+Show previews* to *When Unlocked* if the machine is ever left on a lock screen
+others can see.
+
+`terminal-notifier`'s bottle is adhoc-signed, so macOS denies it notification
+permission until its app bundle has been registered with Launch Services and
+launched once. `dotfiles packages` does that. If notifications never appear,
+run that step again, then check *System Settings → Notifications →
+terminal-notifier*.
 
 Both directories and files are linked, so tracking a new surface —
 `rules/`, `agents/`, `commands/`, `skills/`, `output-styles/`, `workflows/` —

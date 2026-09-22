@@ -10,6 +10,7 @@ brew "lazygit"    # lazygit-config.yml
 brew "bat"        # .zshrc aliases cat -> bat
 brew "eza"        # .zshrc aliases ls/l/ll/la/lsa -> eza
 brew "jq"         # used by claude setup, also general usage
+brew "terminal-notifier"  # claude-global/notify.sh
 
 # nvim-treesitter's main branch generates parsers with the tree-sitter CLI
 # at install/update time. Note this is a different formula from the
