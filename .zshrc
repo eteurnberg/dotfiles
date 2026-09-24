@@ -50,32 +50,10 @@ source $ZSH/oh-my-zsh.sh
 # registers the plugin's version after compinit. False until that step has run.
 (( $+functions[_dotnet] )) && compdef _dotnet dotnet
 
-# Loading nvm (node version manager)
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Call nvm use with correct version when .nvmrc is present in a directory
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+# Per-directory node versions from .nvmrc/.node-version. --use-on-cd replaces
+# the chpwd hook nvm needed, and recursive matches nvm's search of parent
+# directories. Unlike that hook, fnm won't install a missing version for you.
+command -v fnm >/dev/null 2>&1 && eval "$(fnm env --use-on-cd --version-file-strategy=recursive --shell zsh)"
 
 # ALIASES. To see full list, run 'alias'
 
