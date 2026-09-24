@@ -9,16 +9,25 @@ immediately — no reinstall needed.
 
 ## Installing
 
-Requires [Homebrew](https://brew.sh); everything else comes from the tracked
-`Brewfile`. Without Homebrew that step is skipped and the packages have to be
-installed by hand.
-
 1. Clone this repo and `cd` into it.
 2. Run `./install.sh`.
 
+The first step installs [Homebrew](https://brew.sh) if it isn't there already;
+everything else comes from the tracked `Brewfile`. That step is the one place
+this may ask for a password.
+
 Backup anything you already have at the same paths first — existing real files
 are moved to `~/.dotfiles_backup/<timestamp>`, but symlinks are overwritten.
-`.gitconfig` carries my name and email, so change those.
+`.gitconfig` carries my name and email, so change those — or leave them and put
+your own in `~/.gitconfig.local`, which is untracked and included last. See
+`.gitconfig.local.example`.
+
+Two further steps are opt-in and never part of a full run:
+
+```sh
+dotfiles apps    # GUI applications, from Brewfile.apps
+dotfiles macos   # macOS system settings
+```
 
 ## The `dotfiles` command
 
@@ -28,11 +37,16 @@ re-running is always safe. After the first run it's on `PATH` as `dotfiles`.
 ```sh
 dotfiles              # run every step
 dotfiles symlinks     # run one step, skipping the slow brew/Neovim ones
-dotfiles --list       # show all steps
+dotfiles --list       # show all steps, including the optional ones
 ```
 
 Re-run it after adding a new tracked file, or changing the `Brewfile` or
 Neovim's plugin list.
+
+`apps` and `macos` are left out of a full run and only happen when named:
+`apps` pulls down many GB of applications, and `macos` rewrites system settings
+and restarts Dock and Finder — neither belongs in the step you run to pick up a
+new dotfile.
 
 ## Reloading config in place
 
@@ -51,6 +65,10 @@ Packages come from `Brewfile`: zsh, Neovim, tmux, git, plus
 [eza](https://github.com/eza-community/eza),
 [ripgrep](https://github.com/BurntSushi/ripgrep),
 [fd](https://github.com/sharkdp/fd),
+[fzf](https://github.com/junegunn/fzf),
+[fnm](https://github.com/Schniz/fnm) (node versions),
+[gh](https://cli.github.com),
+[mas](https://github.com/mas-cli/mas),
 [shellcheck](https://www.shellcheck.net),
 [rumdl](https://github.com/rvben/rumdl),
 [tree-sitter-cli](https://tree-sitter.github.io),
@@ -61,9 +79,19 @@ Packages come from `Brewfile`: zsh, Neovim, tmux, git, plus
 Font is required for the icons and separators used by the shell prompt, tmux
 status line, Neovim and lazygit.
 
+Also [azure-cli](https://learn.microsoft.com/cli/azure/),
+[pandoc](https://pandoc.org) and [tectonic](https://tectonic-typesetting.github.io)
+(pandoc's PDF engine), and the [.NET SDK](https://dotnet.microsoft.com), which
+the `dotnet` shell function, the oh-my-zsh `dotnet` plugin and `dotfiles
+completions` all shell out to.
+
 `vim` is also installed, with a plugin-free `.vimrc` as a fallback for minimal
 machines. Neovim is the real editor and is what `EDITOR` and git's
 `core.editor` point at.
+
+GUI applications live in a separate `Brewfile.apps` — browsers, editors,
+1Password, Alfred, OrbStack, Spotify and so on. They are installed only by
+`dotfiles apps`, so a machine that just needs a terminal never pulls them down.
 
 ## Shell
 
@@ -82,8 +110,19 @@ machines. Neovim is the real editor and is what `EDITOR` and git's
 `reload` afterwards. Currently just `dotnet`, which needs the .NET 10 SDK;
 re-run it after an SDK upgrade to pick up new commands and flags.
 
+Node versions come from [fnm](https://github.com/Schniz/fnm), which switches on
+`cd` based on `.nvmrc`, `.node-version` or `package.json`, searching parent
+directories. Unlike the nvm hook this replaced, fnm will *not* install a
+version it doesn't have — it says so and you run `fnm install`. Coming from
+nvm, install your versions once (`fnm install 24 && fnm default 24`); `~/.nvm`
+can then be deleted.
+
 Machine-specific values (work email, tokens) go in `~/.zshrc.local`, which is
-untracked — see `.zshrc.local.example`.
+untracked — see `.zshrc.local.example`. Git identity works the same way:
+`~/.gitconfig.local` is included last by `.gitconfig`, so a `[user]` block
+there overrides the tracked default, and an `includeIf` scopes a work email to
+one directory tree without putting the employer's name in this repo. See
+`.gitconfig.local.example`.
 
 ## Neovim
 
@@ -175,6 +214,56 @@ Because `settings.json` is a symlink, anything changed through `/config` is
 written straight back into the repo. If Claude Code ever replaces the symlink
 with a regular file instead of writing through it, treat the repo copy as the
 source of truth and re-run `dotfiles symlinks`.
+
+## macOS settings
+
+`macos/defaults.sh` holds the system settings this machine wants — dark mode,
+Dock size and autohide, tap-to-click off, key repeat, Finder view, where
+screenshots go. `dotfiles macos` applies them all; the script also runs
+standalone with a few more options:
+
+```sh
+./macos/defaults.sh --diff        # report differences, change nothing
+./macos/defaults.sh --list        # list the setting groups
+./macos/defaults.sh dock finder   # apply only the named group(s)
+./macos/defaults.sh --no-restart  # apply without restarting Dock/Finder
+```
+
+Start with `--diff`. It compares every setting against the live machine and
+writes nothing, which is also how a setting changed by hand in System Settings
+gets noticed and folded back into the script. Applying is idempotent: only
+settings that actually differ are written, and Dock, Finder, WindowManager and
+ControlCenter are restarted only when one of their own settings changed.
+
+Two caveats worth knowing. **Quit System Settings first** — it caches these
+domains and writes its copy back when it closes, silently undoing the script.
+And appearance, keyboard, pointer and trackpad settings are only read at login,
+so those need a logout rather than a restart; the script says so when it has
+written one.
+
+## Manual setup
+
+What a new machine still needs by hand.
+
+Needs `sudo`:
+
+| What | How |
+|---|---|
+| Touch ID for `sudo` | Copy `/etc/pam.d/sudo_local.template` to `sudo_local` and uncomment the `pam_tid.so` line. Survives OS updates, unlike editing `/etc/pam.d/sudo` |
+| Touch ID inside tmux | `brew install pam-reattach`, then add `auth optional /opt/homebrew/lib/pam/pam_reattach.so` *above* the `pam_tid.so` line — without it Touch ID never fires in a tmux pane |
+| Computer name | `scutil --set ComputerName`, `--set LocalHostName`, `--set HostName` |
+| Time zone | `systemsetup -settimezone Europe/Stockholm` — also needs the calling terminal to hold Full Disk Access |
+| Rosetta | `softwareupdate --install-rosetta --agree-to-license` |
+
+Not scriptable, or not reliably:
+
+- iCloud sign-in, and any app licence or login.
+- Full Disk Access and other privacy grants — these gate the terminal itself,
+  so they cannot be granted from it.
+- Keyboard layouts. `AppleEnabledInputSources` is writable, but the input
+  system caches it and frequently reverts; set them in System Settings.
+- Firewall and Gatekeeper. `socketfilterfw` is deprecated and
+  `spctl --master-disable` is refused on recent macOS; both are MDM or GUI only.
 
 ## Markdown
 
