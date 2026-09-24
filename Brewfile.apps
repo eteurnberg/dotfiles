@@ -1,0 +1,37 @@
+# GUI applications. Not part of a plain `./install.sh` run -- install these
+# with `dotfiles apps`, which is opt-in because this pulls down many GB and
+# not every machine wants every app.
+#
+# The terminal environment lives in Brewfile; only Ghostty and the Nerd Font
+# are there, since tracked config points at them.
+
+# Takes over apps already installed by hand rather than failing on the app
+# that's already in /Applications, so this works on an existing machine and
+# not just a fresh one.
+cask_args adopt: true
+
+# Core
+cask "1password"
+cask "alfred"
+cask "firefox"
+cask "google-chrome"
+cask "visual-studio-code"
+cask "obsidian"
+cask "notion"
+
+# AI
+cask "chatgpt"
+cask "claude"
+
+# Dev
+cask "orbstack"    # .zprofile sources ~/.orbstack/shell/init.zsh
+cask "docker-desktop"
+cask "dbeaver-community"
+cask "microsoft-azure-storage-explorer"
+
+# Communication
+cask "microsoft-teams"
+cask "discord"
+
+# Media
+cask "spotify"

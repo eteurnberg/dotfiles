@@ -16,11 +16,16 @@
 #   ./install.sh                 run every step, in order
 #   ./install.sh symlinks        run only the named step(s)
 #   ./install.sh symlinks neovim run several, in the order given
+#   ./install.sh apps            run an optional step (never run by default)
 #   ./install.sh --list          list the steps
 #   ./install.sh --help          this message
 #
 # Targeted like that, ordering is your responsibility -- see STEPS below for
 # the dependencies between them. A plain full run is always correct.
+#
+# The optional steps (see OPTIONAL_STEPS) stay out of a full run: `apps`
+# installs many GB of GUI applications, and `macos` rewrites system settings
+# and restarts Dock/Finder. Both run only when named.
 #
 # Written for bash 3.2, which is what macOS still ships (so: no associative
 # arrays, no `readlink -f`).
@@ -56,6 +61,7 @@ dotfiles=(".vimrc" ".zshenv" ".zprofile" ".zshrc" ".gitconfig" ".gitignore_globa
 BACKUP_DIR="${HOME}/.dotfiles_backup/$(date +%Y%m%d%H%M%S)"
 
 # The steps, in the order a full run executes them. Dependencies:
+#   bootstrap -> packages (installs the brew that Brewfile install needs)
 #   packages -> neovim   (needs nvim installed)
 #   packages -> tmux     (tpm's plugin install needs the tmux binary)
 #   symlinks -> neovim   (Lazy sync reads ~/.config/nvim)
@@ -63,10 +69,15 @@ BACKUP_DIR="${HOME}/.dotfiles_backup/$(date +%Y%m%d%H%M%S)"
 #                         and picks its plugin directory by that file's presence)
 #   omz      -> zsh      (plugins live under ~/.oh-my-zsh/custom)
 #   omz      -> completions (they land under ~/.oh-my-zsh/custom)
-STEPS=(packages omz zsh completions fonts symlinks tmux git neovim shell)
+STEPS=(bootstrap packages omz zsh completions fonts symlinks tmux git neovim shell)
+
+# Runnable by name, but never part of a full run -- see the header. Both also
+# depend on bootstrap, for the same reason packages does.
+OPTIONAL_STEPS=(apps macos)
 
 step_description() {
     case "$1" in
+        bootstrap)   echo "Install the Xcode Command Line Tools and Homebrew" ;;
         packages)    echo "Install Homebrew packages listed in Brewfile" ;;
         omz)         echo "Install oh-my-zsh" ;;
         zsh)         echo "Install the powerlevel9k theme and third-party zsh plugins" ;;
@@ -77,6 +88,8 @@ step_description() {
         git)         echo "Point git at the global gitignore" ;;
         neovim)      echo "Install/sync lazy.nvim-managed Neovim plugins" ;;
         shell)       echo "Make zsh the login shell" ;;
+        apps)        echo "Install the GUI applications listed in Brewfile.apps" ;;
+        macos)       echo "Apply the macOS system settings in macos/defaults.sh" ;;
         *)           echo "(no description)" ;;
     esac
 }
@@ -98,6 +111,34 @@ link_dotfile() {
     # self-referential nvim/nvim. Harmless for file symlinks, required for
     # directory ones, and supported by both BSD and GNU ln.
     ln -sfnv "$src" "$dest"
+}
+
+# Install the two things every later step assumes but nothing else provides.
+# The only step that can prompt for a password.
+step_bootstrap() {
+    if command -v brew >/dev/null 2>&1; then
+        return 0
+    fi
+
+    # In practice always already installed -- cloning this repo needs git, and
+    # invoking git is itself what triggers the Command Line Tools install -- so
+    # this is a guard against a confusing failure further down, not a real
+    # install path. `xcode-select --install` drives a GUI installer and can't be
+    # waited on from here.
+    if ! xcode-select -p >/dev/null 2>&1; then
+        echo "The Xcode Command Line Tools aren't installed -- run 'xcode-select --install', let it finish, then re-run this." >&2
+        return 1
+    fi
+
+    NONINTERACTIVE=1 /bin/bash -c \
+        "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # .zprofile puts brew on PATH for login shells, but it was never sourced by
+    # *this* process, so without this the packages step in the same run still
+    # wouldn't find brew.
+    if [ -x /opt/homebrew/bin/brew ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
 }
 
 # Install Homebrew-managed packages listed in Brewfile, if Homebrew itself
@@ -330,10 +371,32 @@ step_shell() {
     fi
 }
 
-# Prints the header comment above (lines 3-23) as the usage text, so the
+# Install the GUI applications in Brewfile.apps. Same --no-upgrade contract as
+# step_packages; kept a separate step, and out of STEPS, because this pulls
+# down many GB that not every machine wants.
+step_apps() {
+    if command -v brew >/dev/null 2>&1; then
+        brew bundle install --no-upgrade --file="$DOTFILES_DIRECTORY/Brewfile.apps"
+    else
+        echo "Homebrew not found -- skipping Brewfile.apps install. Run './install.sh bootstrap' first." >&2
+    fi
+}
+
+# Apply the tracked macOS system settings. Out of STEPS because it restarts
+# Dock and Finder and overwrites anything changed in System Settings since the
+# last run -- neither belongs in a step people run to pick up a new dotfile.
+step_macos() {
+    if [ "$(uname)" = "Darwin" ]; then
+        "$DOTFILES_DIRECTORY/macos/defaults.sh"
+    else
+        echo "Not macOS -- skipping system settings." >&2
+    fi
+}
+
+# Prints the header comment above (lines 3-28) as the usage text, so the
 # two can't drift apart. Keep the range in step if that block moves.
 usage() {
-    sed -n '3,23p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '3,28p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 list_steps() {
@@ -342,11 +405,16 @@ list_steps() {
     for step in "${STEPS[@]}"; do
         printf '  %-11s %s\n' "$step" "$(step_description "$step")"
     done
+    echo
+    echo "Optional steps, run only when named:"
+    for step in "${OPTIONAL_STEPS[@]}"; do
+        printf '  %-11s %s\n' "$step" "$(step_description "$step")"
+    done
 }
 
 is_valid_step() {
     local candidate="$1" step
-    for step in "${STEPS[@]}"; do
+    for step in "${STEPS[@]}" "${OPTIONAL_STEPS[@]}"; do
         [ "$step" = "$candidate" ] && return 0
     done
     return 1
@@ -374,6 +442,7 @@ main() {
                 if ! is_valid_step "$arg"; then
                     echo "Unknown step: $arg" >&2
                     echo "Valid steps: ${STEPS[*]}" >&2
+                    echo "Optional steps: ${OPTIONAL_STEPS[*]}" >&2
                     return 1
                 fi
                 requested+=("$arg")
