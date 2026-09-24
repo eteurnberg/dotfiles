@@ -32,3 +32,8 @@
 	verbose = true
 [init]
 	defaultBranch = main
+# Machine-specific identity -- work email, per-directory overrides. Untracked,
+# and git ignores the path silently when it doesn't exist. Last include wins,
+# so this must stay at the end of the file.
+[include]
+	path = ~/.gitconfig.local

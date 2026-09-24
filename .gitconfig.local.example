@@ -1,0 +1,11 @@
+# Copy this file to ~/.gitconfig.local and fill in real values.
+# ~/.gitconfig.local is machine/personal-specific and is never tracked in this
+# repo -- .gitconfig includes it automatically if present.
+#
+# A plain [user] block here overrides the tracked default for every repo on
+# this machine. An includeIf scopes it to one directory tree instead, which is
+# what a work laptop usually wants -- and keeps the employer's name out of the
+# tracked repo.
+
+[includeIf "gitdir:~/Dev/employer/"]
+	path = ~/.gitconfig.work
