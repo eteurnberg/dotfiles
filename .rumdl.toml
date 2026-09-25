@@ -2,3 +2,8 @@
 # hard-wrapping at 80 would be churn with no benefit.
 [global]
 disable = ["MD013"]
+
+# Claude Code command files open with YAML frontmatter, not a heading --
+# they are prompt templates rather than documents, so MD041 does not apply.
+[per-file-ignores]
+"claude-global/commands/*.md" = ["MD041"]

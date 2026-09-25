@@ -178,9 +178,11 @@ individually into `~/.claude/`.
 | File | Does |
 |---|---|
 | `CLAUDE.md` | Personal defaults loaded in every project |
-| `settings.json` | Model, effort level, theme, status line and the notification hook |
+| `settings.json` | Model, effort level, theme, status line, denied paths and the hooks |
 | `statusline-command.sh` | Status line: model, directory, git branch, context used |
 | `notify.sh` | Desktop notification when Claude wants input (`terminal-notifier`, or `notify-send` on Linux) |
+| `guard-bash.sh` | `PreToolUse` hook refusing unrecoverable Bash commands |
+| `commands/` | Custom slash commands, one markdown file per command |
 
 Notifications are built from the hook payload and the session transcript, so
 each one names the session, the repo and branch it belongs to, and what is
@@ -199,9 +201,34 @@ launched once. `dotfiles packages` does that. If notifications never appear,
 run that step again, then check *System Settings → Notifications →
 terminal-notifier*.
 
+`settings.json` denies reads of `~/.ssh`, `~/.aws`, `~/.gnupg`, gh's token
+file and `.env` files. A deny wins over any allow, including one granted on
+the command line, so this holds in every project on the machine.
+
+`guard-bash.sh` refuses two things outright: an `rm -rf` whose target is the
+home directory or the filesystem root, and a force-push to `master`/`main`
+(`--force-with-lease` is deliberately left alone). It is a backstop for the
+cases where being wrong is unrecoverable, not a policy engine — the
+permission prompt already covers everything else, and it costs about 10ms on
+every Bash call. Matching is textual, so a rule only fires when its command
+starts a segment; quoted text in another command's arguments does not trip it.
+
+The guard fails open on any internal error, which means a broken rule is a
+silent one — so the patterns have tests. Run `./tests/guard-bash.sh` after
+changing any of them.
+
+`commands/` holds one markdown file per slash command, each available in
+every project. Frontmatter sets the description and which tools the command
+may use; the body is the prompt.
+
+| Command | Does |
+|---|---|
+| `/commit` | Commit the working tree as one or more conventional commits |
+| `/pr` | Push the branch and open a pull request |
+
 Both directories and files are linked, so tracking a new surface —
-`rules/`, `agents/`, `commands/`, `skills/`, `output-styles/`, `workflows/` —
-is a matter of adding it to `claude-global/` and running `dotfiles symlinks`.
+`rules/`, `agents/`, `skills/`, `output-styles/`, `workflows/` — is a
+matter of adding it to `claude-global/` and running `dotfiles symlinks`.
 
 Nothing else under `~/.claude` is tracked, and deliberately so: session
 transcripts, caches, plugin checkouts and `~/.claude.json` are runtime state,
