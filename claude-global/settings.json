@@ -1,5 +1,15 @@
 {
   "model": "opus[1m]",
+  "permissions": {
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(**/.env)",
+      "Read(**/.env.local)"
+    ]
+  },
   "hooks": {
     "Notification": [
       {
