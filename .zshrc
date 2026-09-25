@@ -87,8 +87,7 @@ alias npmrs="npm run serve"
 alias dockerka='docker stop $(docker ps -a -q)'
 
 # Powerlevel10k Config
-# Still POWERLEVEL9K_* -- powerlevel10k kept the old parameter names, so this
-# block is what powerlevel9k used, unchanged.
+# Still POWERLEVEL9K_* -- powerlevel10k kept powerlevel9k's parameter names.
 
 # Icon set. powerlevel9k was left at its default, which only has Powerline
 # glyphs, so the vcs segment rendered without its branch icon. MesloLGS Nerd
@@ -104,9 +103,22 @@ POWERLEVEL9K_MODE="nerdfont-v3"
 # branch name rather than a separator) get it back from p10k regardless.
 POWERLEVEL9K_ICON_PADDING=none
 
-# Prompt segments
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator time)
+# Prompt segments. Everything on the right bar the clock is conditional --
+# each renders only when it has something to say -- so the usual prompt is no
+# longer than it was before they were added.
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs prompt_char)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+  status command_execution_time background_jobs direnv
+  node_version dotnet_version root_indicator time
+)
+
+# Once a command is submitted, collapse the prompt it was typed at down to
+# just its prompt char, keeping the full one only on the live line. Scrollback
+# becomes a list of what was run rather than the same context repeated, and
+# copying a block of output stops dragging prompts along with it. same-dir
+# rather than always, so a prompt survives whole when the next command runs
+# somewhere else and a change of directory stays visible in the history.
+POWERLEVEL9K_TRANSIENT_PROMPT=same-dir
 
 # Segment customizations
 
@@ -125,7 +137,51 @@ POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_unique"
 POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION=
 POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_EXPANSION=
 
-POWERLEVEL9K_STATUS_VERBOSE=false
+# The prompt char doubles as the vi-mode indicator that the oh-my-zsh vi-mode
+# plugin otherwise leaves invisible: p10k supplies the glyphs itself (insert,
+# normal, visual, overwrite) and colours them by the last exit status. What
+# needs setting is that it render bare rather than as one more powerline
+# segment, and in the terminal's own green and red so it follows the Solarized
+# theme rather than p10k's built-in 256-colour pair.
+POWERLEVEL9K_PROMPT_CHAR_BACKGROUND=
+POWERLEVEL9K_PROMPT_CHAR_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=
+POWERLEVEL9K_PROMPT_CHAR_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL=
+POWERLEVEL9K_PROMPT_CHAR_OVERWRITE_STATE=true
+# Brace expansion only happens in command position, hence typeset -- which is
+# how powerlevel10k's own configs write these too.
+typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=2
+typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=1
+
+# How long the last command took, shown only once it passes the threshold, so
+# anything quick costs no width at all. Precision 0: sub-second detail on a
+# command slow enough to be worth reporting is noise.
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
+
+# That there *is* a suspended job is the part worth seeing; the count is not.
+POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
+
+# Tool versions only inside a project that uses them. dotnet already defaults
+# this way and node does not -- left alone it reports in every directory on the
+# machine. With fnm switching per directory, this is what says which version it
+# actually settled on.
+POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=true
+POWERLEVEL9K_DOTNET_VERSION_PROJECT_ONLY=true
+
+# Status. EXTENDED_STATES is the substantive part: it tells a plain non-zero
+# exit apart from one caused by a signal and from a pipeline whose failure the
+# final command hid, so each can be shown on its own terms.
+#   OK      off -- a command that worked needs no decoration, and the prompt
+#                  char is already green
+#   OK_PIPE on  -- but a pipeline reporting success while a component failed is
+#                  precisely the case that gets missed (this is why the segment
+#                  can still appear after an apparently fine command)
+#   VERBOSE on  -- print the code, and SIGSEGV rather than 139. This was false,
+#                  which is what reduced every failure to an unexplained cross.
+POWERLEVEL9K_STATUS_EXTENDED_STATES=true
+POWERLEVEL9K_STATUS_OK=false
+POWERLEVEL9K_STATUS_OK_PIPE=true
+POWERLEVEL9K_STATUS_VERBOSE=true
 
 POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 
