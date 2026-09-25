@@ -48,7 +48,9 @@ export DOTFILES_DIRECTORY
 # Variables, make any wanted changes here
 TPM_LOCATION=~/.config/tmux/plugins/tpm
 OH_MY_ZSH_LOCATION=~/.oh-my-zsh
-OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
+OH_MY_ZSH_THEME_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel10k"
+# Cleared by step_zsh -- see there for why
+STALE_POWERLEVEL9K_LOCATION="$OH_MY_ZSH_LOCATION/custom/themes/powerlevel9k"
 ZSH_CUSTOM_PLUGINS_DIR="$OH_MY_ZSH_LOCATION/custom/plugins"
 ZSH_CUSTOM_COMPLETIONS_DIR="$OH_MY_ZSH_LOCATION/custom/completions"
 
@@ -80,7 +82,7 @@ step_description() {
         bootstrap)   echo "Install the Xcode Command Line Tools and Homebrew" ;;
         packages)    echo "Install Homebrew packages listed in Brewfile" ;;
         omz)         echo "Install oh-my-zsh" ;;
-        zsh)         echo "Install the powerlevel9k theme and third-party zsh plugins" ;;
+        zsh)         echo "Install the powerlevel10k theme and third-party zsh plugins" ;;
         completions) echo "Generate zsh completions for tools that emit their own" ;;
         tmux)        echo "Install Tmux Plugin Manager (tpm) and the plugins tmux.conf declares" ;;
         fonts)       echo "Install Powerline fonts" ;;
@@ -176,12 +178,25 @@ step_omz() {
     fi
 }
 
-# Install oh-my-zsh theme powerlevel9k, plus the third-party plugins
+# Install oh-my-zsh theme powerlevel10k, plus the third-party plugins
 # referenced in .zshrc's plugins=(), if not already installed. Plugin
 # entries are "install dir name|git url".
 step_zsh() {
-    if [ ! -d "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION" ]; then
-        git clone https://github.com/bhilburn/powerlevel9k.git "$OH_MY_ZSH_POWERLEVEL9K_THEME_LOCATION"
+    # Clear the powerlevel9k checkout left by the older config. Upstream's last
+    # release was 2020 and it now redirects to powerlevel10k, which reads the
+    # same POWERLEVEL9K_* parameters -- so this is a swap, not a reconfigure.
+    # Guarded on .git so a hand-written theme of that name is never destroyed.
+    if [ -d "$STALE_POWERLEVEL9K_LOCATION/.git" ]; then
+        rm -rf "$STALE_POWERLEVEL9K_LOCATION"
+        echo "Removed the superseded powerlevel9k checkout."
+    fi
+
+    # --depth=1: this is a vendored checkout nothing reads history from, and
+    # powerlevel10k's is large enough to be worth not fetching. Note the theme
+    # also fetches a gitstatusd binary into ~/.cache on the first prompt it
+    # draws, so a fresh machine's first shell needs the network once more.
+    if [ ! -d "$OH_MY_ZSH_THEME_LOCATION" ]; then
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$OH_MY_ZSH_THEME_LOCATION"
     fi
 
     local zsh_plugins entry plugin_dir plugin_url

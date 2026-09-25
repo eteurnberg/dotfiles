@@ -1,5 +1,13 @@
 # Zsh (oh-my-zsh) configuration by Emil Teurnberg
 
+# Powerlevel10k instant prompt: replays a cached prompt before the rest of this
+# file runs, so the shell is usable immediately rather than after oh-my-zsh
+# finishes. Must stay at the very top, and anything above it that writes to the
+# console or reads input breaks it -- p10k says so on startup when that happens.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Machine/personal-specific values (emails, tokens, etc.) not tracked in the
 # dotfiles repo. See .zshrc.local.example for the expected shape.
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
@@ -16,7 +24,7 @@ fi
 export ZSH=~/.oh-my-zsh
 
 # The theme to use. Look in: ~/.oh-my-zsh/themes/
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 DEFAULT_USER="$USER"
 
 # Disables setting auto titles for terminal window.
@@ -86,7 +94,15 @@ alias npmrs="npm run serve"
 # Docker
 alias dockerka='docker stop $(docker ps -a -q)'
 
-# Powerlevel9k Config
+# Powerlevel10k Config
+# Still POWERLEVEL9K_* -- powerlevel10k kept the old parameter names, so this
+# block is what powerlevel9k used, unchanged.
+
+# Icon set. powerlevel9k was left at its default, which only has Powerline
+# glyphs, so the vcs segment rendered without its branch icon. MesloLGS Nerd
+# Font (Brewfile) is v3, matching what lazygit-config.yml already declares.
+POWERLEVEL9K_MODE="nerdfont-v3"
+
 # Prompt segments
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator time)
