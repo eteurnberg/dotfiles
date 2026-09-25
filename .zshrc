@@ -95,6 +95,15 @@ alias dockerka='docker stop $(docker ps -a -q)'
 # Font (Brewfile) is v3, matching what lazygit-config.yml already declares.
 POWERLEVEL9K_MODE="nerdfont-v3"
 
+# Icon spacing. Every icon string already ends in a space, and p10k adds
+# another between a segment's icon and its content -- so left at the default
+# each one renders two spaces wide. "none" strips the trailing space from the
+# icons and lets p10k's single separator stand, which is what all four of
+# powerlevel10k's own shipped configs do. The icons that genuinely need their
+# own padding (the vcs branch/tag/commit icons, which butt up against the
+# branch name rather than a separator) get it back from p10k regardless.
+POWERLEVEL9K_ICON_PADDING=none
+
 # Prompt segments
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator time)
