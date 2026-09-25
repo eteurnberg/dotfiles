@@ -110,9 +110,20 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator time)
 
 # Segment customizations
 
+# Shorten each parent directory to the shortest prefix that still tells it
+# apart from its siblings on disk, rather than to a fixed width: ~/Dev/mavatar
+# collapses to ~/Dev/m, while Dev itself stays whole because Desktop shares
+# "De" with it. Repo roots are anchors and are never shortened, so the project
+# being worked in stays spelled out. Under this strategy SHORTEN_DIR_LENGTH is
+# the number of trailing components kept whole, not a character count.
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_DELIMITER=""
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_to_unique"
+
+# Segment icons off. The folder glyph said nothing the path did not, and the
+# git glyph nothing the branch glyph did not.
+POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION=
+POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_EXPANSION=
 
 POWERLEVEL9K_STATUS_VERBOSE=false
 
