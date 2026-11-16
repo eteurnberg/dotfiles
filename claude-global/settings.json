@@ -38,6 +38,9 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
   },
+  "enabledPlugins": {
+    "forever-addon-dev@forever-addon-dev": true
+  },
   "extraKnownMarketplaces": {
     "forever-addon-dev": {
       "source": {
@@ -52,8 +55,5 @@
       "effortLevel": "xhigh"
     }
   },
-  "theme": "auto",
-  "enabledPlugins": {
-    "forever-addon-dev@forever-addon-dev": true
-  }
+  "theme": "auto"
 }
