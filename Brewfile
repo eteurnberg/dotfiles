@@ -30,9 +30,13 @@ brew "ripgrep"
 brew "fd"
 brew "gh"
 brew "mas"       # installs Mac App Store apps from a Brewfile
-brew "azure-cli"
 brew "pandoc"    # document conversion; tectonic is its PDF engine
 brew "tectonic"
+
+# Cloud CLIs
+brew "awscli"
+cask "azure-cli"
+cask "gcloud-cli"
 
 # GUI terminal emulator
 cask "ghostty"    # ghostty-config is symlinked to ~/.config/ghostty/config
