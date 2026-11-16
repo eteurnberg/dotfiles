@@ -391,7 +391,11 @@ step_shell() {
 # down many GB that not every machine wants.
 step_apps() {
     if command -v brew >/dev/null 2>&1; then
-        brew bundle install --no-upgrade --file="$DOTFILES_DIRECTORY/Brewfile.apps"
+        if ! brew bundle install --no-upgrade --file="$DOTFILES_DIRECTORY/Brewfile.apps"; then
+            echo "If an adopted app failed with 'chgrp: ... Operation not permitted', give your terminal" >&2
+            echo "App Management access (System Settings > Privacy & Security), restart it, then re-run this." >&2
+            return 1
+        fi
     else
         echo "Homebrew not found -- skipping Brewfile.apps install. Run './install.sh bootstrap' first." >&2
     fi

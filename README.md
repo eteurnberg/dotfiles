@@ -93,6 +93,12 @@ GUI applications live in a separate `Brewfile.apps` — browsers, editors,
 1Password, Alfred, OrbStack, Spotify and so on. They are installed only by
 `dotfiles apps`, so a machine that just needs a terminal never pulls them down.
 
+Apps already installed by hand are adopted into Homebrew rather than
+reinstalled. Adopting means re-grouping the app bundle, which macOS blocks
+unless the terminal has App Management access (System Settings → Privacy &
+Security → App Management). Grant it once, restart the terminal, and re-run
+`dotfiles apps`.
+
 ## Shell
 
 | Alias | Runs |
