@@ -32,6 +32,7 @@ cask "microsoft-azure-storage-explorer"
 # Communication
 cask "microsoft-teams"
 cask "discord"
+cask "slack"
 
 # Media
 cask "spotify"
