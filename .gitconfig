@@ -37,3 +37,5 @@
 # so this must stay at the end of the file.
 [include]
 	path = ~/.gitconfig.local
+[url "git@github.com:"]
+	insteadOf = https://github.com/

@@ -12,7 +12,7 @@ brew "eza"        # .zshrc aliases ls/l/ll/la/lsa -> eza
 brew "fzf"        # .zshrc loads the oh-my-zsh fzf plugin
 brew "fnm"        # .zshrc evals `fnm env` for per-directory node versions
 brew "jq"         # used by claude setup, also general usage
-brew "terminal-notifier"  # claude-global/notify.sh
+brew "terminal-notifier"  # pitstop hooks/notify.sh
 
 # nvim-treesitter's main branch generates parsers with the tree-sitter CLI
 # at install/update time. Note this is a different formula from the
@@ -30,8 +30,9 @@ brew "ripgrep"
 brew "fd"
 brew "gh"
 brew "mas"       # installs Mac App Store apps from a Brewfile
-brew "pandoc"    # document conversion; tectonic is its PDF engine
+brew "pandoc"    # document conversion; tectonic and typst are its PDF engines
 brew "tectonic"
+brew "typst"
 
 # Cloud CLIs
 brew "awscli"
@@ -41,7 +42,7 @@ cask "gcloud-cli"
 # GUI terminal emulator
 cask "ghostty"    # ghostty-config is symlinked to ~/.config/ghostty/config
 
-# Claude Code; its user-level config is tracked in claude-global/
+# Claude Code; its user-level config is tracked in pitstop
 cask "claude-code"
 
 # The dotnet oh-my-zsh plugin, .zshrc's dotnet wrapper and install.sh's

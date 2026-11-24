@@ -178,75 +178,10 @@ tmux start and after a reboot.
 
 ## Claude Code
 
-User-level config lives in `claude-global/`, whose contents are symlinked
-individually into `~/.claude/`.
-
-| File | Does |
-|---|---|
-| `CLAUDE.md` | Personal defaults loaded in every project |
-| `settings.json` | Model, effort level, theme, status line, denied paths and the hooks |
-| `statusline-command.sh` | Status line: model, directory, git branch, context used |
-| `notify.sh` | Desktop notification when Claude wants input (`terminal-notifier`, or `notify-send` on Linux) |
-| `guard-bash.sh` | `PreToolUse` hook refusing unrecoverable Bash commands |
-| `commands/` | Custom slash commands, one markdown file per command |
-
-Notifications are built from the hook payload and the session transcript, so
-each one names the session, the repo and branch it belongs to, and what is
-actually being asked — the pending command for a permission prompt, Claude's
-last message when a session goes idle. They are grouped by session id, so a
-session replaces its own previous notification instead of stacking, and inside
-tmux clicking one focuses the pane it came from.
-
-Because the body can quote repo content, set *System Settings → Notifications →
-Show previews* to *When Unlocked* if the machine is ever left on a lock screen
-others can see.
-
-`terminal-notifier`'s bottle is adhoc-signed, so macOS denies it notification
-permission until its app bundle has been registered with Launch Services and
-launched once. `dotfiles packages` does that. If notifications never appear,
-run that step again, then check *System Settings → Notifications →
-terminal-notifier*.
-
-`settings.json` denies reads of `~/.ssh`, `~/.aws`, `~/.gnupg`, gh's token
-file and `.env` files. A deny wins over any allow, including one granted on
-the command line, so this holds in every project on the machine.
-
-`guard-bash.sh` refuses two things outright: an `rm -rf` whose target is the
-home directory or the filesystem root, and a force-push to `master`/`main`
-(`--force-with-lease` is deliberately left alone). It is a backstop for the
-cases where being wrong is unrecoverable, not a policy engine — the
-permission prompt already covers everything else, and it costs about 10ms on
-every Bash call. Matching is textual, so a rule only fires when its command
-starts a segment; quoted text in another command's arguments does not trip it.
-
-The guard fails open on any internal error, which means a broken rule is a
-silent one — so the patterns have tests. Run `./tests/guard-bash.sh` after
-changing any of them.
-
-`commands/` holds one markdown file per slash command, each available in
-every project. Frontmatter sets the description and which tools the command
-may use; the body is the prompt.
-
-| Command | Does |
-|---|---|
-| `/commit` | Commit the working tree as one or more conventional commits |
-| `/pr` | Push the branch and open a pull request |
-
-Both directories and files are linked, so tracking a new surface —
-`rules/`, `agents/`, `skills/`, `output-styles/`, `workflows/` — is a
-matter of adding it to `claude-global/` and running `dotfiles symlinks`.
-
-Nothing else under `~/.claude` is tracked, and deliberately so: session
-transcripts, caches, plugin checkouts and `~/.claude.json` are runtime state,
-and the last of those holds the signed-in account and machine identifiers.
-Project-scoped settings for this repo stay in `.claude/settings.json`;
-`.claude/settings.local.json` is machine-local and excluded by
-`.gitignore_global`.
-
-Because `settings.json` is a symlink, anything changed through `/config` is
-written straight back into the repo. If Claude Code ever replaces the symlink
-with a regular file instead of writing through it, treat the repo copy as the
-source of truth and re-run `dotfiles symlinks`.
+User-level Claude Code config lives in its own repo,
+pitstop, which the `symlinks` step links into
+`~/.claude/` by running its `install.sh`. Set `PITSTOP_DIRECTORY` if it is
+not checked out at `~/dev/pitstop`.
 
 ## macOS settings
 
