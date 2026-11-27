@@ -18,6 +18,7 @@ cask "google-chrome"
 cask "visual-studio-code"
 cask "obsidian"
 cask "notion"
+cask "linear"
 cask "tailscale-app"  # a .pkg, so adopt doesn't apply: an existing install is reinstalled in place
 
 # AI
